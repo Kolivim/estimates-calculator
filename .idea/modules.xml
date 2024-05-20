@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/estimates-calculator.iml" filepath="$PROJECT_DIR$/.idea/estimates-calculator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/api/estimates.calculator-api.iml" filepath="$PROJECT_DIR$/api/estimates.calculator-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/db/estimates.calculator-db.iml" filepath="$PROJECT_DIR$/db/estimates.calculator-db.iml" />
+      <module fileurl="file://$PROJECT_DIR$/domain/estimates.calculator-domain.iml" filepath="$PROJECT_DIR$/domain/estimates.calculator-domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/impl/estimates.calculator-impl.iml" filepath="$PROJECT_DIR$/impl/estimates.calculator-impl.iml" />
+    </modules>
+  </component>
+</project>

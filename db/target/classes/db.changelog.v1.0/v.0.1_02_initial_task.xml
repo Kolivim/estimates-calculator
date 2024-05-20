@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="createTaskTable" author="Ivan">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="task"/>
+            </not>
+        </preConditions>
+        <createTable tableName="task">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="is_deleted" type="boolean"/>
+            <column name="author_id" type="uuid"/>
+            <column name="executor_id" type="uuid"/>
+<!--            <column name="comment" type="varchar(255)"/>-->
+            <column name="description" type="MEDIUMTEXT"/>
+            <column name="title" type="varchar(255)"/>
+            <column name="status" type="varchar(255)" value="('PENDING', 'INPROCESS', 'COMPLETED')"/>
+            <column name="priority" type="varchar(255)" value="('HIGH', 'MEDIUM', 'LOW')"/>
+        </createTable>
+    </changeSet>
+    
+</databaseChangeLog>
+

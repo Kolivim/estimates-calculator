@@ -1,0 +1,173 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="createEstimatesTable" author="kolivim">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="estimates"/>
+            </not>
+        </preConditions>
+
+
+        <createTable tableName="estimates">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="is_deleted" type="boolean"/>
+
+            <!-- Проверить все ли указано!!! -->
+            <column name="element_id" type="uuid"/>
+            <column name="work_price_list" type="uuid"/>       <!--     Для вывода цены отличной от указанной в привязанном к смете прайсе      -->
+            <column name="material_price_list" type="uuid"/>   <!--     Для вывода цены отличной от указанной в привязанном к смете прайсе      -->
+
+            <column name="description" type="MEDIUMTEXT"/>
+            <column name="last_author_id" type="uuid"/>
+            <column name="last_modified_date" type="timestamp(6) with time zone"/>
+            <column name="version" type="integer"/>
+            <column name="status" type="varchar(255)" value="('ARCHIVE', 'INPROCESS', 'COMPLETED')"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createBasicElementsEstimatesTable" author="kolivim">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="elements"/>
+            </not>
+        </preConditions>
+        <createTable tableName="elements">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="is_deleted" type="boolean"/>
+
+            <column name="works_name" type="varchar(255)"/>
+            <column name="unit_measurement" type="varchar(255)"/>
+            <column name="revision" type="varchar(255)"/>
+            <column name="is_parent" type="boolean"/>
+            <column name="parent_id" type="uuid"/>
+            <column name="group" type="integer"/>              <!--     Для вывода предложений работ той же группы      -->
+            <column name="work_price_list" type="uuid"/>       <!--     Для вывода цены отличной от указанной в привязанном к смете прайсе      -->
+            <column name="material_price_list" type="uuid"/>   <!--     Для вывода цены отличной от указанной в привязанном к смете прайсе      -->
+
+            <column name="description" type="MEDIUMTEXT"/>
+            <column name="last_author_id" type="uuid"/>
+            <column name="last_modified_date" type="timestamp(6) with time zone"/>
+            <column name="version" type="integer"/>
+            <column name="status" type="varchar(255)" value="('ARCHIVE', 'INPROCESS', 'COMPLETED')"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createMaterialBasicElementsEstimatesTable" author="kolivim">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="material_elements"/>
+            </not>
+        </preConditions>
+        <createTable tableName="material_elements">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="is_deleted" type="boolean"/>
+
+            <column name="id_element" type="varchar(255)"/>
+            <column name="material_name" type="varchar(255)"/>
+            <column name="unit_measurement" type="varchar(255)"/>
+
+            <column name="consumption_rate" type="NUMERIC(16,2)"/>         <!--Где не задействовано принимать =1 и тоже умножать -->
+            <column name="reduction_factor" type="NUMERIC(16,2)"/>         <!--Где не задействовано принимать =1 и тоже умножать -->
+            <column name="number_layers" type="NUMERIC(16,2)"/>            <!--Где не задействовано принимать =1 и тоже умножать -->
+            <column name="layer_thickness" type="NUMERIC(16,2)"/>          <!--Где не задействовано принимать =1 и тоже умножать -->
+
+            <column name="description" type="MEDIUMTEXT"/>
+            <column name="last_author_id" type="uuid"/>
+            <column name="last_modified_date" type="timestamp(6) with time zone"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createWorkPriceListTable" author="kolivim">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="work_price_list"/>
+            </not>
+        </preConditions>
+        <createTable tableName="work_price_list">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="is_deleted" type="boolean"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="description" type="MEDIUMTEXT"/>
+            <column name="last_author_id" type="uuid"/>
+            <column name="last_modified_date" type="timestamp(6) with time zone"/>
+            <column name="version" type="integer"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createWorkPricingTable" author="kolivim">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="work_pricing"/>
+            </not>
+        </preConditions>
+        <createTable tableName="work_pricing">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="is_deleted" type="boolean"/>
+            <column name="price_list_id" type="uuid"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="price" type="NUMERIC(16,2)"/>
+            <column name="description" type="MEDIUMTEXT"/>
+            <column name="last_author_id" type="uuid"/>
+            <column name="last_modified_date" type="timestamp(6) with time zone"/>
+            <column name="version" type="integer"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createMaterialPriceListTable" author="kolivim">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="material_price_list"/>
+            </not>
+        </preConditions>
+        <createTable tableName="material_price_list">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="is_deleted" type="boolean"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="description" type="MEDIUMTEXT"/>
+            <column name="last_author_id" type="uuid"/>
+            <column name="last_modified_date" type="timestamp(6) with time zone"/>
+            <column name="version" type="integer"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createMaterialPricingTable" author="kolivim">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="material_pricing"/>
+            </not>
+        </preConditions>
+        <createTable tableName="material_pricing">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="is_deleted" type="boolean"/>
+            <column name="price_list_id" type="uuid"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="price" type="NUMERIC(16,2)"/>
+            <column name="description" type="MEDIUMTEXT"/>
+            <column name="last_author_id" type="uuid"/>
+            <column name="last_modified_date" type="timestamp(6) with time zone"/>
+            <column name="version" type="integer"/>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>
+
