@@ -26,8 +26,8 @@
           <entry name="$MAVEN_REPOSITORY$/com/sun/istack/istack-commons-runtime/4.1.1/istack-commons-runtime-4.1.1.jar" />
         </processorPath>
         <module name="estimates.calculator-impl" />
-        <module name="estimates.calculator-api" />
         <module name="estimates.calculator-domain" />
+        <module name="estimates.calculator-api" />
         <module name="estimates.calculator-db" />
       </profile>
     </annotationProcessing>

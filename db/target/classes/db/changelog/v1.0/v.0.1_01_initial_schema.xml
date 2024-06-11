@@ -56,9 +56,7 @@
             <column name="middle_name" type="varchar(255)"/>
             <column name="last_name" type="varchar(255)"/>
             <column name="password" type="varchar(255)"/>
-<!--            <column name="created_by" type="jsonb"/>-->
-<!--            <column name="created_date" type="timestamp(6)"/>-->
-<!--            <column name="last_modified_by" type="jsonb"/>-->
+            <column name="login" type="varchar(255)"/>
         </createTable>
     </changeSet>
 
@@ -150,11 +148,14 @@
 
     <changeSet id="createUserRoleTable" author="kolivim">
         <createTable tableName="user_role">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
             <column name="role_id" type="uuid">
-                <constraints primaryKey="true"/>
+<!--                <constraints primaryKey="true"/>-->
             </column>
             <column name="user_id" type="uuid">
-                <constraints primaryKey="true"/>
+<!--                <constraints primaryKey="true"/>-->
             </column>
             <column name="estimate_id" type="uuid">
             </column>

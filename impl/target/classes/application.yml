@@ -1,5 +1,6 @@
-server:
-  port: 8080
+#server:
+#  port: 8080
+
 spring:
 #  autoconfigure:
 #    exclude:
@@ -35,7 +36,7 @@ spring:
     open-in-view: false
 
     org:
-      springframework: ${LOG:info}
+      springframework: ${LOG:debug}
   file:
     name: logs/log
 
