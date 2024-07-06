@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: task.management
+
+  cloud:
+    kubernetes:
+      sources:
+        - name: task.management
+      secrets:
+        sources:
+          - name: task.management
+      reload:
+        enabled: true
+
+management:
+  endpoint:
+    restart:
+      enabled: true
+    health:
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+
+
+
+

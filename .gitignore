@@ -2,6 +2,9 @@
 .idea/
 target/
 
+# IDEA files
+*.iml
+
 # Compiled class file
 *.class
 
