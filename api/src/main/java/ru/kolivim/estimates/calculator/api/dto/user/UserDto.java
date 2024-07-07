@@ -17,36 +17,27 @@ public class UserDto extends BaseDto {
     @Schema(description = "Метка удаления")
     private boolean isDeleted;
 
-    @Schema(description = "Номера телефонов / телефона")
-    private List<String> phoneList;                                              /** Достаем селектом из таблицы Phone*/
+    @Schema(description = "Имя пользователя")
+    private String firstName;
 
-    @Schema(description = "Список Email пользователя")
-    private List<String> emailList;                                              /** Достаем селектом из таблицы Email*/
+    @Schema(description = "Отчество пользователя")
+    private String middleName;
 
-    @Schema(description = "Дата рождения пользователя")
-    ZonedDateTime birthDate;
+    @Schema(description = "Фамилия пользователя")
+    private String lastName;
 
-    @Schema(description = "ФИО пользователя")
-    private String fullname;
-
-    @Schema(description = "Логин")
+    @Schema(description = "Логин пользователя")
     private String login;
 
     @Schema(description = "Пароль")
     private String password;
 
-    /** Без него обойтись смогу*/
-//    @Schema(description = "Идентификатор банковского аккаунта")
-//    private UUID accountId;
 
-// //////////////////////////////////////////////////////////////////////////////////////////
-
-//    private LocalDateTime registrationDate;
-//
-//    private LocalDateTime createdOn;
-//
-//    private LocalDateTime updatedOn;
-
-//    @Schema(description = "Фамилия пользователя")
-//    private String lastName;
+    /**
+     private String firstName;
+     private String middleName;
+     private String lastName;
+     private String login;
+     private String password;
+     */
 }

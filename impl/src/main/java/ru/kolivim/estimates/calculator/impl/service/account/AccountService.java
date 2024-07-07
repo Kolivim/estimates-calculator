@@ -2,21 +2,20 @@ package ru.kolivim.estimates.calculator.impl.service.account;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolivim.estimates.calculator.impl.mapper.account.MapperAccount;
-import ru.kolivim.estimates.calculator.impl.mapper.user.EmailMapper;
-import ru.kolivim.estimates.calculator.impl.mapper.user.PhoneMapper;
-import ru.kolivim.estimates.calculator.api.dto.auth.RegistrationDto;
-import ru.kolivim.estimates.calculator.api.dto.search.BaseSearchDto;
+import org.springframework.util.Assert;
+import ru.kolivim.estimates.calculator.api.dto.account.AccountDto;
 import ru.kolivim.estimates.calculator.domain.account.Account;
-import ru.kolivim.estimates.calculator.domain.user.Email;
-import ru.kolivim.estimates.calculator.domain.user.Phone;
+import ru.kolivim.estimates.calculator.impl.mapper.account.AccountMapper;
 import ru.kolivim.estimates.calculator.impl.repository.account.AccountRepository;
-import ru.kolivim.estimates.calculator.impl.repository.user.EmailRepository;
-import ru.kolivim.estimates.calculator.impl.repository.user.PhoneRepository;
 
+import javax.security.auth.login.AccountException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Slf4j
@@ -24,98 +23,144 @@ import java.util.*;
 @Transactional
 @RequiredArgsConstructor
 public class AccountService {
+//    private static final String BADREUQEST = "bad reqest";
+
+    private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
-//    private final UserRepository userRepository;
-    private final PhoneRepository phoneRepository;
-    private final EmailRepository emailRepository;
+
+//    private final RoleService roleService;
+
+    public AccountDto create(AccountDto accountDto) throws AccountException {
+        log.info("AccountService:create(AccountDto accountDto) startMethod, получена AccountDto:/n{}", accountDto);
 
 
-//    private final MapperAuthenticate mapperAuthenticate;
-    private final MapperAccount mapperAccount;
-    private final PhoneMapper phoneMapper;
-    private final EmailMapper emailMapper;
-
-    private static final int MAX_PERCENT = 207;
-    private static final  int INCREASE_PERCENT = 5;
+        /**
+         TODO:
+         Добавить сюда проверку на существование с выбросом эксепшена для остановки программы !!!
+         Через вызов отдельного метода в этом месте !!!
+         */
 
 
-    public Boolean create(RegistrationDto registrationDto) {
-        log.info("AccountService: create(RegistrationDto registrationDto), registrationDto: {}",
-                registrationDto);
+        /**
+         lastOnlineTime оставляем не заполненным - принимаем что пользователь не может создать сам себя,
+         это прерогатива администратора TODO: Рассмотреть возможность создания VIEWER'a самим собой и поправить тогда логику
+         */
+        accountDto.setDepartment("тестовый_СделатьМетод"); // TODO: Достаем по position её department и кладем его сюда, через вызов отдельного метода
+        accountDto.setPersonnelNumber("тестовый_СделатьМетод"); // TODO: Достаем по position её department и ищем последний актуальный номер и кладем сюда следующий за ним, через вызов отдельного метода
+        accountDto.setRegistrationDate(ZonedDateTime.now());
+        accountDto.setLastModifiedDate(ZonedDateTime.now());
 
-        Account account = accountRepository.save(mapperAccount.toAccount(registrationDto, getMaxBalance(registrationDto)));
-        Phone phone = phoneRepository.save(phoneMapper.toPhone(registrationDto, account.getId()));
-        Email email = emailRepository.save(emailMapper.toEmail(registrationDto, account.getId()));
+        /**
+         В тестовом режиме можно временно проставить вручную всем создаваемым пользователям Estimate
+         для дальнейшего формирования основной логики
+         Через вызов отдельного метода в этом месте !!!
+         TODO: Добавить назначение роли пользователю и соответсвующее поле в ДТО / другую ДТОшку
+         */
 
-        log.info("AccountService: create(*) endMethod, Account: {}, Phone: {}, Email: {}",
-                account, phone, email);
-        return true;
+        return accountMapper.toDto(save(accountMapper.toAccount(accountDto)));
     }
 
-    /** Нужно делать потокобезопасным */
-    @Scheduled(cron = "${cron.addPercent}")
-    public void addPercent() {
-        log.info("AccountService: addPercent() startMethod");
-        List<Account> accountList = accountRepository.findAll();
-        log.info("AccountService: addPercent() получен List<Account> accountList: {}", accountList);
-        accountList.stream()
-                .filter(acc -> acc.getIsDeleted() == false)
-                .filter(acc -> incrBalance(acc.getBalance()) <= acc.getMaxBalance())
-                .forEach(acc -> {
-                    acc.setBalance(incrBalance(acc.getBalance()));
-                    log.info("AccountService: addPercent() сохранен Account: {}", accountRepository.save(acc));});
-        accountRepository.saveAll(accountList);
+    private Account save(Account account) {
+        log.info("AccountService:save(Account account) startMethod, получен к сохранению Account:/n{}", account);
+        return accountRepository.save(account);
     }
 
-    public synchronized boolean pay(UUID userToPay, UUID user, Double sum) {
-        log.info("AccountService: pay(UUID userToPay, UUID user) startMethod, UUID userToPay : {}, UUID user: {}" ,
-                userToPay, user);
-
-        Account account = accountRepository.findById(user).orElseThrow();
-        Account accountTo = accountRepository.findById(userToPay).orElseThrow();
-
-        Double sumAfter = account.getBalance() - sum;
-        Double sumAfterTo = accountTo.getBalance() + sum;
-
-        if(sumAfter > 0 && !userToPay.equals(user)) {
-            account.setBalance(sumAfter);
-            accountTo.setBalance(sumAfterTo);
-            accountRepository.save(account);
-            accountRepository.save(accountTo);
-        } else {
-            return false;
-        }
-
-        return false;
-    }
+    /**
+     private ZonedDateTime lastOnlineTime;
+     private String about;
+     private String phone;
+     private String email;
+     private String position;
+     private String department;
+     private String personnelNumber;
+     private ZonedDateTime registrationDate;
+     private ZonedDateTime lastModifiedDate;
+     */
 
 
+//    public AccountDto update(AccountDto accountDto) throws AccountException {
+//        log.info("AccountService:putMe() startMethod");
+//        Account account = accountDto.getId() != null ? accountRepository
+//                .findById(accountDto.getId()).get() : accountRepository.findById(AuthUtil.getUserId()).get();
+//        account = mapperAccount.rewriteEntity(accountRepository.findById(account.getId()).get(), accountDto);
+//        accountRepository.save(account);
+//        return mapperAccount.toDto(account);
+//    }
 
-    private double getMaxBalance(RegistrationDto registrationDto) {
-        log.info("AccountService: getMaxBalance(RegistrationDto registrationDto), registrationDto: {}",
-                registrationDto);
+//    public AccountDto getByEmail(String email) throws AccountException {
+//        log.info("AccountService:get(String email) startMethod");
+//        return mapperAccount.toDto(accountRepository.findFirstByEmail(email).orElseThrow(() -> new AccountException("BADREUQEST")));
+//    }
 
-        double maxBalance = registrationDto.getBalance() * MAX_PERCENT / 100;
+//    public AccountDto getId(UUID uuid) throws AccountException {
+//        log.info("AccountService:get(String email) startMethod");
+//        return mapperAccount.toDto(accountRepository.findById(uuid).orElseThrow(() -> new AccountException("BADREUQEST")));
+//    }
 
-        log.info("AccountService: getMaxBalance(*) endMethod, mxBalance: {}", maxBalance);
-        return maxBalance;
+//    public AccountDto getMe() throws AccountException {
+//        log.info("AccountService: getMe() startMethod");
+//        return mapperAccount.toDto(accountRepository.findById(AuthUtil.getUserId()).orElseThrow(() -> new AccountException(BADREUQEST)));
+//    }
 
-    }
+//    public Page<AccountDto> getAll(AccountSearchDto accountSearchDto, Pageable pageable) throws AccountException {
+//        Specification spec = SpecificationUtils.equal(Account_.COUNTRY, accountSearchDto.getCountry())
+//                .or(SpecificationUtils.like(Account_.FIRST_NAME, accountSearchDto.getFirstName()))
+//                .or(SpecificationUtils.like(Account_.LAST_NAME, accountSearchDto.getLastName()))
+//                .or(SpecificationUtils.like(Account_.CITY, accountSearchDto.getCity()))
+//                .or(SpecificationUtils.equal(Account_.EMAIL, accountSearchDto.getEmail()))
+//                .or(SpecificationUtils.between(Account_.BIRTH_DATE, accountSearchDto.getAgeFrom(), accountSearchDto.getAgeTo()))
+//                .or(SpecificationUtils.in(Account_.ID, accountSearchDto.getIds()));
+//        Page<Account> accounts = accountRepository.findAll(spec, pageable);
+//        return accounts.map(mapperAccount::toDto);
+//    }
 
-    private double incrBalance(Double balance) {
-        log.info("AccountService: incrBalance(Double balance), Double: {}", balance);
-        balance = balance + (balance * INCREASE_PERCENT / 100);
-        log.info("AccountService: incrBalance(*), in out balance: {}", balance);
-        return balance;
+//    public AccountDto putMe(AccountDto accountDto) throws AccountException {
+//        log.info("AccountService:putMe() startMethod");
+//        return mapperAccount.toDto(mapperAccount.rewriteEntity(accountRepository.findById(AuthUtil.getUserId()).get(), accountDto));
+//    }
 
-    }
+//    public boolean delete() throws AccountException {
+//        log.info("AccountService:delete() startMethod");
+//        accountRepository.deleteById(AuthUtil.getUserId());
+//        return true;
+//    }
 
-    private BaseSearchDto getBaseSearchDto(){
-        BaseSearchDto baseSearchDto = new BaseSearchDto();
-        baseSearchDto.setIsDeleted(false);
-        return  baseSearchDto;
-    }
+//    public boolean deleteId(UUID id) throws AccountException {
+//        log.info("AccountService:deleteId() startMethod");
+//        accountRepository.deleteById(id);
+//        return true;
+//    }
+
+
+//    public JwtDto getJwtDto(AuthenticateDto authenticateDto) {
+//        log.info("AccountService:getJwtDto() startMethod");
+//        Optional<Account> account = accountRepository.findFirstByEmail(authenticateDto.getEmail());
+//        Assert.isTrue(account.isPresent());
+//        Assert.isTrue(account.get().getPassword().equals(authenticateDto.getPassword()));
+//        JwtDto jwtDto = new JwtDto();
+//        jwtDto.setId(account.get().getId());
+//        jwtDto.setEmail(account.get().getEmail());
+//        jwtDto.setRoles(listOfRolesFromSetOfRoles(account.get().getRoles()));
+//        account.get().setLastOnlineTime(LocalDateTime.now());
+//        return jwtDto;
+//    }
+
+//    public Boolean doesAccountWithSuchEmailExist(String email) {
+//        return accountRepository.findFirstByEmail(email).isPresent();
+//    }
+
+//    private List<String> listOfRolesFromSetOfRoles(Set<Role> roles) {
+//        log.info("AccountService:listOfRolesFromSetOfRoles() startMethod");
+//        ArrayList<String> roleNames = new ArrayList<>();
+//        for (Role role : roles) {
+//            roleNames.add(role.getRole());
+//        }
+//        return roleNames;
+//    }
+
+//    public Account getAccountByEmail(String email) {
+//        return accountRepository.findFirstByEmail(email).orElse(null);
+//    }
+
+
 }
-
-
-

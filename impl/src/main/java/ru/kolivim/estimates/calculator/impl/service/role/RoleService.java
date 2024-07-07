@@ -12,13 +12,13 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class RoleService {
-    private final RoleRepository roleRepository;
-
-    public Set<Role> getRoleSet(List<String> roleNames){
-        Set<Role> roles = new HashSet<>();
-        for(String roleName : roleNames){
-            roles.add(roleRepository.getByRole(roleName).orElse(null));
-        }
-        return roles;
-    }
+//    private final RoleRepository roleRepository;
+//
+//    public Set<Role> getRoleSet(List<String> roleNames){
+//        Set<Role> roles = new HashSet<>();
+//        for(String roleName : roleNames){
+//            roles.add(roleRepository.getByRole(roleName).orElse(null));
+//        }
+//        return roles;
+//    }
 }

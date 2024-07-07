@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <property name="schema" value="bank.transaction.system"/>
+    <property name="schema" value="estimates.calculator"/>
 
     <include file="db/changelog/v1.0/changelog-v1.0-cumulative.xml" relativeToChangelogFile="true"/>
 

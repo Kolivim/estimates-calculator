@@ -3,7 +3,7 @@ package ru.kolivim.estimates.calculator.impl.mapper.account;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;
-import ru.kolivim.estimates.calculator.api.dto.auth.RegistrationDto;
+//import ru.kolivim.estimates.calculator.api.dto.auth.RegistrationDto;
 import ru.kolivim.estimates.calculator.domain.account.Account;
 
 
@@ -14,6 +14,7 @@ import ru.kolivim.estimates.calculator.domain.account.Account;
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public abstract class MapperAccount {
 
+    /*
     public Account toAccount(RegistrationDto registrationDto, Double maxBalance) {
         log.info("MapperAccount:toAccount(RegistrationDto registrationDto, Float maxBalance) startMethod, " +
                 "RegistrationDto: {}, maxBalance: {}", registrationDto, maxBalance);
@@ -53,4 +54,5 @@ public abstract class MapperAccount {
     @Mapping(target = "password", source = "dto.password1")
     public abstract AccountDto accountDtoFromRegistrationDto(RegistrationDto dto);
     */
+
 }

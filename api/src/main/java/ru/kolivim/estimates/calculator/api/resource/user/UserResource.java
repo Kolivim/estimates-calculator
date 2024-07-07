@@ -1,22 +1,17 @@
 package ru.kolivim.estimates.calculator.api.resource.user;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kolivim.estimates.calculator.api.dto.account.AccountDto;
-import ru.kolivim.estimates.calculator.api.dto.user.UserDataDTO;
 import ru.kolivim.estimates.calculator.api.dto.user.UserDto;
-import org.springframework.data.domain.Pageable;
 
 import javax.security.auth.login.AccountException;
-import java.util.UUID;
 
 @RestController
 //@RequestMapping("api/v1/account/")
@@ -34,7 +29,7 @@ public interface UserResource {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = AccountDto.class))
+                                    schema = @Schema(implementation = UserDto.class))
                     }),
             @ApiResponse(
                     responseCode = "400",
@@ -62,8 +57,12 @@ public interface UserResource {
                     })
     })
     @PostMapping()
-    public ResponseEntity<AccountDto> create(@RequestBody AccountDto account) throws AccountException;
+    public ResponseEntity<UserDto> create(@RequestBody UserDto userDto) throws AccountException;
 
+////////////////////////////////////////////////////////
+
+
+/*
     @Operation(summary = "Добавление номера телефона пользователем",
             description = "Отправка запроса на добавление номера телефона, авторизованным пользователем")
     @ApiResponses(value = {
@@ -269,9 +268,11 @@ public interface UserResource {
     })
     @DeleteMapping("/email")
     public ResponseEntity deleteEmail(@RequestBody UserDataDTO userDataDTO);
+*/
 
     /** Правильно выделить отдельную роль администратора для поиска по пользователям.
         Сейчас получается пользователь ищет пользователей*/
+    /*
     @Operation(summary = "Поиск пользователей",
             description = "Отправка запроса на поиск пользователей по полю fullname, авторизованным пользователем")
     @ApiResponses(value = {
@@ -465,7 +466,7 @@ public interface UserResource {
 
 
     /** Ниже исходники: */
-
+/*
     @Operation(summary = "Получение данных аккаунта по email",
             description = "Получение данных существующего акаунта по email")
     @ApiResponses(value = {
@@ -745,7 +746,7 @@ public interface UserResource {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteId(
             @Parameter(description = "Идентификатор аккаунта") @PathVariable UUID id)throws AccountException;
-
+*/
 }
 
 

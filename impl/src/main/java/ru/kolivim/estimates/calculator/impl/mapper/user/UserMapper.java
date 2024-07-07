@@ -13,6 +13,7 @@ import java.util.ArrayList;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
 
+    /*
     @Mappings({
             @Mapping(target = "id", source = "user.id"),
             @Mapping(target = "isDeleted", source = "user.isDeleted"),
@@ -36,4 +37,5 @@ public interface UserMapper {
             @Mapping(target = "password", source = "password")
     })
     UserDto toUserDTO(User user);
+    */
 }

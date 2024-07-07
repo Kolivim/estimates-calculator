@@ -3,6 +3,7 @@ package ru.kolivim.estimates.calculator.domain.account;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.kolivim.estimates.calculator.domain.user.User;
+import java.time.ZonedDateTime;
 
 //@Data
 @Entity
@@ -14,40 +15,46 @@ import ru.kolivim.estimates.calculator.domain.user.User;
 @Table(name = "account")
 public class Account extends User {
 
-    @Column(name="balance")
-    private Double balance;
+    @Column(name="last_online_time")
+    private ZonedDateTime lastOnlineTime;
 
-    @Column(name="max_balance")
-    private Double maxBalance;
+    @Column(name="about")
+    private String about;
+
+    @Column(name="phone")
+    private String phone;
+
+    @Column(name="email")
+    private String email;
+
+    @Column(name="position")
+    private String position;
+
+    @Column(name="department")
+    private String department;
+
+    @Column(name="personnel_number")
+    private String personnelNumber;
+
+    @Column(name="registration_date")
+    private ZonedDateTime registrationDate;
+
+    @Column(name="last_modified_date")
+    private ZonedDateTime lastModifiedDate;
 
 
-//    @Column(name="phone")
-//    private String phone;
-//    @Column(name="photo")
-//    private String photo;
-//    @Column(name="profile_cover")
-//    private String profileCover;
-//    @Column(name="about")
-//    private String about;
-//    @Column(name="city")
-//    private String city;
-//    @Column(name="country")
-//    private String country;
-//    @Column(name="status_code")
-//    @Enumerated(EnumType.STRING)
-//    private StatusCode statusCode;
-//    @Column(name="birth_date")
-//    private LocalDateTime birthDate;
-//    @Column(name="message_permission")
-//    private String messagePermission;
-//    @Column(name="last_online_time")
-//    private LocalDateTime lastOnlineTime;
-//    @Column(name="is_online")
-//    private boolean isOnline;
-//    @Column(name="is_blocked")
-//    private boolean isBlocked;
-//    @Column(name="emoji_status")
-//    private String emojiStatus;
-//    @Column(name="deletion_timestamp")
-//    private LocalDateTime deletionTimestamp;
+/** table :
+    is_blocked         boolean,
+    last_online_time   timestamp(6) with time zone,
+    id                 uuid not null primary key,
+    about              varchar(255),
+    phone              varchar(255),
+    email              varchar(255),
+    position           varchar(255),
+    department         varchar(255),
+    personnel_number   varchar(255),
+    registration_date  timestamp(6) with time zone,
+    last_modified_date timestamp(6) with time zone
+*/
+
 }
