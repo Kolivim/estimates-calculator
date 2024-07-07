@@ -11,8 +11,8 @@
         <relativePath/>
     </parent>
 
-    <artifactId>task.management</artifactId>
-    <groupId>ru.kolivim.myproject</groupId>
+    <artifactId>estimates.calculator</artifactId>
+    <groupId>ru.kolivim</groupId>
     <version>${project.version}</version>
 
     <packaging>pom</packaging>
@@ -27,8 +27,8 @@
     </properties>
 
 
-    <name>KOLIVIM :: MYPROJECT :: task.management</name>
-    <description>task.management</description>
+    <name>KOLIVIM :: estimates.calculator</name>
+    <description>estimates.calculator</description>
 
 
 
