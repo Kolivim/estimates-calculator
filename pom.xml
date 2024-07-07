@@ -6,7 +6,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.3.1</version>
+<!--        <version>3.1.2</version>-->
         <relativePath/>
     </parent>
 
@@ -137,7 +138,7 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <configuration>
-                        <mainClass>ru.kolivim.myproject.task.management.system.impl.Application</mainClass>
+                        <mainClass>ru.kolivim.estimates.calculator.impl.Application</mainClass>
                     </configuration>
                     <executions>
                         <execution>
