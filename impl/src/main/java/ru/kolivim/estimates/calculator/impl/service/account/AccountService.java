@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.kolivim.estimates.calculator.api.dto.account.AccountDto;
+import ru.kolivim.estimates.calculator.api.dto.user.UserDto;
 import ru.kolivim.estimates.calculator.domain.account.Account;
 import ru.kolivim.estimates.calculator.impl.mapper.account.AccountMapper;
 import ru.kolivim.estimates.calculator.impl.repository.account.AccountRepository;
@@ -29,6 +30,38 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
 //    private final RoleService roleService;
+
+    public UserDto create(UserDto userDto) throws AccountException {
+        log.info("AccountService:create(UserDto userDto) startMethod, получена UserDto:/n{}", userDto);
+
+
+        /**
+         TODO:
+         Добавить сюда проверку на существование с выбросом эксепшена для остановки программы !!!
+         Через вызов отдельного метода в этом месте !!!
+         */
+
+
+        /**
+         lastOnlineTime оставляем не заполненным - принимаем что пользователь не может создать сам себя,
+         это прерогатива администратора TODO: Рассмотреть возможность создания VIEWER'a самим собой и поправить тогда логику
+         */
+
+//        accountDto.setDepartment("тестовый_СделатьМетод"); // TODO: Достаем по position её department и кладем его сюда, через вызов отдельного метода
+//        accountDto.setPersonnelNumber("тестовый_СделатьМетод"); // TODO: Достаем по position её department и ищем последний актуальный номер и кладем сюда следующий за ним, через вызов отдельного метода
+//        accountDto.setRegistrationDate(ZonedDateTime.now());
+//        accountDto.setLastModifiedDate(ZonedDateTime.now());
+
+        /**
+         В тестовом режиме можно временно проставить вручную всем создаваемым пользователям Estimate
+         для дальнейшего формирования основной логики
+         Через вызов отдельного метода в этом месте !!!
+         TODO: Добавить назначение роли пользователю и соответсвующее поле в ДТО / другую ДТОшку
+         */
+
+        save(new Account());
+        return new UserDto();
+    }
 
     public AccountDto create(AccountDto accountDto) throws AccountException {
         log.info("AccountService:create(AccountDto accountDto) startMethod, получена AccountDto:/n{}", accountDto);

@@ -2,6 +2,7 @@ package ru.kolivim.estimates.calculator.domain.account;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.kolivim.estimates.calculator.domain.base.BaseEntity;
 import ru.kolivim.estimates.calculator.domain.user.User;
 import java.time.ZonedDateTime;
 

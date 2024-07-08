@@ -3,6 +3,7 @@ package ru.kolivim.estimates.calculator.domain.user;
 import jakarta.persistence.*;
 import lombok.*;
 //import org.hibernate.envers.NotAudited;
+import ru.kolivim.estimates.calculator.domain.account.Account;
 import ru.kolivim.estimates.calculator.domain.base.BaseEntity;
 import ru.kolivim.estimates.calculator.domain.role.Role;
 
