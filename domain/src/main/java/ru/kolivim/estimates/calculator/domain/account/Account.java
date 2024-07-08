@@ -14,7 +14,8 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "account")
-public class Account extends User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Account extends BaseEntity /*User*/ {
 
     @Column(name="last_online_time")
     private ZonedDateTime lastOnlineTime;

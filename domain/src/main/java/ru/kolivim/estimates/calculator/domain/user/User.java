@@ -18,8 +18,8 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.JOINED)
-public class User extends BaseEntity /*BaseAuditedEntity*/ {
+//@Inheritance(strategy = InheritanceType.JOINED)
+public class User extends Account /*BaseEntity *//*BaseAuditedEntity*/ {
 
     @Column(name = "first_name")
     private String firstName;
