@@ -11,11 +11,10 @@ import ru.kolivim.estimates.calculator.impl.service.user.UserService;
 import ru.kolivim.estimates.calculator.api.resource.user.UserResource;
 
 import javax.security.auth.login.AccountException;
+import java.util.UUID;
 
 @Slf4j
 @RestController
-//@RequestMapping("api/v1/user")
-//@RequestMapping("api/v1/account")
 @RequiredArgsConstructor
 public class UserResourceImpl implements UserResource {
 
@@ -25,6 +24,13 @@ public class UserResourceImpl implements UserResource {
     public ResponseEntity<UserDto> create(UserDto userDto) throws AccountException {
         log.info("UserResourceImpl:create(UserDto userDto) startMethod, UserDto: {}", userDto);
         return ResponseEntity.ok(userService.create(userDto));
+    }
+
+    @Override
+    public ResponseEntity<UserDto> createWithDepartmentAndPosition(UUID departmentId, UUID positionId, UserDto userDto) throws AccountException {
+        log.info("UserResourceImpl:createWithDepartmentAndPosition(UUID departmentId, UUID positionId, UserDto userDto) startMethod, " +
+                "UserDto: {}, UUID departmentId: {}, UUID positionId: {}", userDto, departmentId, positionId);
+        return ResponseEntity.ok(userService.createWithDepartmentAndPosition(userDto, positionId, departmentId));
     }
 
 //    @Override

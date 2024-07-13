@@ -12,12 +12,14 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends BaseRepository<User>  /*JpaRepository<User, UUID> */{
+    Optional<User> findById(UUID id);
+
+    Boolean existsByLogin(String login);
+
 //    Optional<User> findByIdAndIsDeletedFalse(UUID id);
 
 //    Optional<User> findFirstByEmail(UUID id);
-
 //    Optional<User> findByLogin(String login);
-    Optional<User> findById(UUID id);
 //    Optional<User> findByLoginAndIsDeletedFalse(String login);
 //    Page<User> findAllByFullnameLikeAndIsDeletedFalse(String fullName, Pageable pageable);
 //    Page<User> findAllByBirthDateAfterAndIsDeletedFalse(ZonedDateTime birthDate, Pageable pageable);

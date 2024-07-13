@@ -6,18 +6,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolivim.estimates.calculator.domain.user.User;
+import ru.kolivim.estimates.calculator.impl.exception.UserException;
 import ru.kolivim.estimates.calculator.impl.mapper.account.MapperAccount;
 import ru.kolivim.estimates.calculator.impl.mapper.account.MapperAuthenticate;
 import ru.kolivim.estimates.calculator.impl.mapper.user.UserMapper;
 import ru.kolivim.estimates.calculator.api.dto.user.UserDto;
-import ru.kolivim.estimates.calculator.domain.account.Account;
 import ru.kolivim.estimates.calculator.impl.mapper.user.UsersMapper;
 import ru.kolivim.estimates.calculator.impl.repository.user.UserRepository;
 import ru.kolivim.estimates.calculator.impl.service.account.AccountService;
 import ru.kolivim.estimates.calculator.impl.service.role.RoleService;
 import ru.kolivim.estimates.calculator.impl.repository.account.AccountRepository;
 
-import javax.security.auth.login.AccountException;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -36,25 +36,75 @@ public class UserService {
     private final AccountRepository accountRepository;
     private final RoleService roleService;
 
-    public UserDto create(UserDto userDto) throws AccountException {
+    public UserDto create(UserDto userDto) throws UserException /*AccountException*/ {
         log.info("UserService:create(RegistrationDto registrationDto) startMethod, RegistrationDto: {}",
                 userDto);
 
-        /**
-         TODO:
-         Добавить сюда проверку на существование с выбросом эксепшена для остановки программы !!!
-         Через вызов отдельного метода в этом месте !!!
-         */
+        /** Проверка на существование login пользователя и пустой запрос */
+        getErrorIfNull(userDto);
+        getErrorIfUserExist(userDto);
 
-//        User user = userRepository.save(usersMapper.toUser(userDto));
         User user = save(usersMapper.toUser(userDto));
         return usersMapper.toDto(user);
+    }
+
+    public UserDto createWithDepartmentAndPosition(UserDto userDto, UUID positionId, UUID departmentId) {
+        log.info("UserService:createWithDepartmentAndPosition(UUID departmentId, UUID positionId, UserDto userDto) " +
+                "startMethod, " + "UserDto: {}, UUID departmentId: {}, UUID positionId: {}",
+                userDto, departmentId, positionId);
+        getCheksAllDepartmentsInfo(departmentId, positionId);
+        UserDto createdUserDto = create(userDto);
+        User createdUser = userRepository.findById(createdUserDto.getId()).get();
+        createdUser.setDepartment(departmentId.toString());
+        createdUser.setPosition(positionId.toString());
+        return usersMapper.toDto(userRepository.save(createdUser));
     }
 
     private User save(User user) {
         log.info("UserService:save(User user) startMethod, User: {}", user);
         return userRepository.save(user);
     }
+
+    private void getErrorIfNull(Object object) {
+        log.info("UserService:getErrorIfNull(Object object) startMethod, Object: {}", object);
+        if ((object == null)) {
+            throw new UserException("Не получены данные пользователя");
+        }
+    }
+
+    private void getErrorIfUserExist(UserDto userDto) {
+        log.info("UserService:getErrorIfUserExist(UserDto userDto) startMethod, UserDto: {}", userDto);
+        if (userRepository.existsByLogin(userDto.getLogin())) {
+            throw new UserException("Пользователь с таким login уже существует");   // TODO: Вынести формирование текстовки в Util класс
+        }
+    }
+
+    private void getCheksAllDepartmentsInfo(UUID departmentId, UUID positionId) {
+        log.info("UserService:getCheksAllDepartmentsInfo(UUID departmentId, UUID positionId) startMethod, " +
+                "получены departmentId: {}, positionId: {}", departmentId, positionId);
+        getErrorIfDepartmentNotExist(departmentId);
+        getErrorIfPositionNotExist(positionId);
+    }
+
+    private void getErrorIfDepartmentNotExist(UUID departmentId) {
+        log.info("UserService:getErrorIfDepartmentNotExist(UUID departmentId) startMethod, получен departmentId: {}",
+                departmentId);
+        if (false /*Repository.existsById(departmentId)*/ ) {
+            throw new UserException("Отдела с таким UUID: "+ departmentId +" не существует");   // TODO: Добавить проверку в репозитории и Вынести формирование текстовки в Util класс
+        }
+    }
+
+    private void getErrorIfPositionNotExist(UUID positionId) {
+        log.info("UserService:getErrorIfPositionNotExist(UUID positionId) startMethod, получен positionId: {}",
+                positionId);
+        if (false /*Repository.existsById(positionId)*/ ) {
+            throw new UserException("Должности с таким UUID: "+ positionId +" не существует");   // TODO: Добавить проверку в репозитории и Вынести формирование текстовки в Util класс
+        }
+    }
+
+    ////////////////////////////////////////////////
+
+
 
 //    public Boolean doesUserDataExist(RegistrationDto registrationDto) {
 //        log.info("UserService: doesUserDataExist(RegistrationDto registrationDto) startMethod, RegistrationDto: {}",

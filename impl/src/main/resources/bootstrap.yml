@@ -1,27 +1,27 @@
 spring:
   application:
-    name: task.management
+    name: estimates.calculator
 
-  cloud:
-    kubernetes:
-      sources:
-        - name: task.management
-      secrets:
-        sources:
-          - name: task.management
-      reload:
-        enabled: true
+#  cloud:
+#    kubernetes:
+#      sources:
+#        - name: estimates.calculator
+#      secrets:
+#        sources:
+#          - name: estimates.calculator
+#      reload:
+#        enabled: true
 
-management:
-  endpoint:
-    restart:
-      enabled: true
-    health:
-      enabled: true
-    info:
-      enabled: true
-    prometheus:
-      enabled: true
+#management:
+#  endpoint:
+#    restart:
+#      enabled: true
+#    health:
+#      enabled: true
+#    info:
+#      enabled: true
+#    prometheus:
+#      enabled: true
 
 
 

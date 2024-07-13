@@ -34,6 +34,8 @@ public class UserDto extends BaseDto {
 
 
     /**
+     private UUID id;
+     private boolean isDeleted;
      private String firstName;
      private String middleName;
      private String lastName;

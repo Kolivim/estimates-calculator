@@ -17,6 +17,9 @@ import java.time.ZonedDateTime;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Account extends BaseEntity /*User*/ {
 
+    @Column(name="is_blocked")
+    private Boolean isBlocked;
+
     @Column(name="last_online_time")
     private ZonedDateTime lastOnlineTime;
 

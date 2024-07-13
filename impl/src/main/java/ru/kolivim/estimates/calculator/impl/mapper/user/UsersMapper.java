@@ -10,6 +10,8 @@ import ru.kolivim.estimates.calculator.api.dto.user.UserDto;
 import ru.kolivim.estimates.calculator.domain.account.Account;
 import ru.kolivim.estimates.calculator.domain.user.User;
 
+import java.time.ZonedDateTime;
+
 @Slf4j
 @Component
 @Mapper(componentModel = "spring",
@@ -21,15 +23,24 @@ public abstract class UsersMapper {
         log.info("UsersMapper:toUser(UserDto userDto) startMethod - получен UserDto: {}", userDto);
 
         User user = new User();
-//        account.setLastOnlineTime(accountDto.getLastOnlineTime());
+
+        user.setFirstName(userDto.getFirstName());
+        user.setMiddleName(userDto.getMiddleName());
+        user.setLastName(userDto.getLastName());
+        user.setLogin(userDto.getLogin());
+        user.setPassword(userDto.getPassword());
+
+        user.setIsDeleted(false);
+        user.setRegistrationDate(ZonedDateTime.now());
+        user.setLastModifiedDate(ZonedDateTime.now());
+        user.setIsBlocked(false);
+
+        /** Остались не заполнеными: */
+        // TODO: Определиться с механизмом заполнения - где и как, какое начальное значение присвоить
 //        account.setAbout(accountDto.getAbout());
 //        account.setPhone(accountDto.getPhone());
 //        account.setEmail(accountDto.getEmail());
-//        account.setPosition(accountDto.getPosition());
-//        account.setDepartment(accountDto.getDepartment());
 //        account.setPersonnelNumber(accountDto.getPersonnelNumber());
-//        account.setRegistrationDate(accountDto.getRegistrationDate());
-//        account.setLastModifiedDate(accountDto.getLastModifiedDate());
 
         log.info("UsersMapper:toUser(UserDto userDto) endMethod - получен к возврату User: {}", user);
         return user;
@@ -39,15 +50,13 @@ public abstract class UsersMapper {
         log.info("UsersMapper:toDto(User user) startMethod - получен User: {}", user);
 
         UserDto userDto = new UserDto();
-//        accountDto.setLastOnlineTime(account.getLastOnlineTime());
-//        accountDto.setAbout(account.getAbout());
-//        accountDto.setPhone(account.getPhone());
-//        accountDto.setEmail(account.getEmail());
-//        accountDto.setPosition(account.getPosition());
-//        accountDto.setDepartment(account.getDepartment());
-//        accountDto.setPersonnelNumber(account.getPersonnelNumber());
-//        accountDto.setRegistrationDate(account.getRegistrationDate());
-//        accountDto.setLastModifiedDate(account.getLastModifiedDate());
+        userDto.setId(user.getId());
+        userDto.setIsDeleted(user.getIsDeleted());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setMiddleName(user.getMiddleName());
+        userDto.setLastName(user.getLastName());
+        userDto.setLogin(user.getLogin());
+        userDto.setPassword(user.getPassword());
 
         log.info("UsersMapper:toDto(User user) endMethod - получен к возврату UserDto: {}", userDto);
         return userDto;
@@ -55,27 +64,21 @@ public abstract class UsersMapper {
 
 
     /**
-     * AccountDTO:
-     private ZonedDateTime lastOnlineTime;
-     private String about;
-     private String phone;
-     private String email;
-     private String position;
-     private String department;
-     private String personnelNumber;
-     private ZonedDateTime registrationDate;
-     private ZonedDateTime lastModifiedDate;
+     * UserDTO:
+     private UUID id;
+     private boolean isDeleted;
+     private String firstName;
+     private String middleName;
+     private String lastName;
+     private String login;
+     private String password;
 
-     * Account:
-     private ZonedDateTime lastOnlineTime;
-     private String about;
-     private String phone;
-     private String email;
-     private String position;
-     private String department;
-     private String personnelNumber;
-     private ZonedDateTime registrationDate;
-     private ZonedDateTime lastModifiedDate;
+     * User:
+     private String firstName;
+     private String middleName;
+     private String lastName;
+     private String login;
+     private String password;
      */
 
 

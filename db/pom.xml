@@ -25,7 +25,7 @@
         <profile>
             <id>liquibase</id>
             <properties>
-                <liquibase.changeLogFile>src/main/resources/database-social.network-changelog.xml
+                <liquibase.changeLogFile>src/main/resources/database-estimates.calculator-changelog.xml
                 </liquibase.changeLogFile>
             </properties>
             <build>

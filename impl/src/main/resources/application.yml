@@ -1,19 +1,19 @@
 server:
   port: 8081
 spring:
-  profiles:
-    active: testaccount
+#  profiles:
+#    active: testaccount
   liquibase:
 #    enabled: false
     enabled: true
     drop-first: ${DROP_FIRST:false}
-    change-log: classpath:database-bank.transaction.system-changelog.xml
+    change-log: classpath:database-estimates.calculator-changelog.xml
 
 
   datasource:
-    url: jdbc:postgresql://${HOST:localhost}:${PORT:5432}/${DB_NAME:transactions}
-    username: ${DB_USERNAME:transactions}
-    password: ${DB_PASSWORD:transactions}
+    url: jdbc:postgresql://${HOST:localhost}:${PORT:5435}/${DB_NAME:estimates}
+    username: ${DB_USERNAME:estimates}
+    password: ${DB_PASSWORD:estimates}
     driverClassName: org.postgresql.Driver
 
   jpa:

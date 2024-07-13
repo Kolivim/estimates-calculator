@@ -1,6 +1,7 @@
 package ru.kolivim.estimates.calculator.api.resource.user;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,9 +13,9 @@ import ru.kolivim.estimates.calculator.api.dto.account.AccountDto;
 import ru.kolivim.estimates.calculator.api.dto.user.UserDto;
 
 import javax.security.auth.login.AccountException;
+import java.util.UUID;
 
 @RestController
-//@RequestMapping("api/v1/account/")
 @RequestMapping("api/v1/user")
 @Tag(name = "Api сервиса аккаунта",
         description = "Сервис для создания, редактирования, получения и удаления аккаунта")
@@ -58,6 +59,51 @@ public interface UserResource {
     })
     @PostMapping()
     public ResponseEntity<UserDto> create(@RequestBody UserDto userDto) throws AccountException;
+
+    @Operation(summary = "Создание аккаунта, с указанием его отдела и должности",
+            description = "Создание нового аккаунта, с указанием его отдела и должности")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Метод успешно выполнен",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDto.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Не верный запрос",
+                    content = {
+                            @Content(schema = @Schema(implementation = void.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Авторизация не пройдена. Необходимо авторизоваться",
+                    content = {
+                            @Content(schema = @Schema(implementation = void.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Доступ к данным запрещен",
+                    content = {
+                            @Content(schema = @Schema(implementation = void.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Неизвестная ошибка",
+                    content = {
+                            @Content(schema = @Schema(implementation = void.class))
+                    })
+    })
+    @PostMapping("/{departmentId}/{positionId}")
+    public ResponseEntity<UserDto> createWithDepartmentAndPosition(
+            @Parameter(description = "Идентификатор отдела") @PathVariable UUID departmentId,
+            @Parameter(description = "Идентификатор должности") @PathVariable UUID positionId,
+            @RequestBody UserDto userDto
+    ) throws AccountException;
+
+
 
 ////////////////////////////////////////////////////////
 
@@ -270,8 +316,6 @@ public interface UserResource {
     public ResponseEntity deleteEmail(@RequestBody UserDataDTO userDataDTO);
 */
 
-    /** Правильно выделить отдельную роль администратора для поиска по пользователям.
-        Сейчас получается пользователь ищет пользователей*/
     /*
     @Operation(summary = "Поиск пользователей",
             description = "Отправка запроса на поиск пользователей по полю fullname, авторизованным пользователем")
