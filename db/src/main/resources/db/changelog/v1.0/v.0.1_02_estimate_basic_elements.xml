@@ -88,18 +88,19 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="createWorkPriceListTable" author="kolivim">
+    <changeSet id="createPriceListTypeTable" author="kolivim">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="work_price_list"/>
+                <tableExists tableName="type_price_list"/>
             </not>
         </preConditions>
-        <createTable tableName="work_price_list">
+        <createTable tableName="type_price_list">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="is_deleted" type="boolean"/>
-            <column name="name" type="varchar(255)"/>
+            <column name="type" type="integer"/>            <!-- Work, Material, etc -->
+            <column name="name" type="varchar(255)"/>       <!-- Work, Material, etc -->
             <column name="description" type="MEDIUMTEXT"/>
             <column name="last_author_id" type="uuid"/>
             <column name="last_modified_date" type="timestamp(6) with time zone"/>
@@ -107,67 +108,126 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="createWorkPricingTable" author="kolivim">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="work_pricing"/>
-            </not>
-        </preConditions>
-        <createTable tableName="work_pricing">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" />
-            </column>
-            <column name="is_deleted" type="boolean"/>
-            <column name="price_list_id" type="uuid"/>
-            <column name="name" type="varchar(255)"/>
-            <column name="price" type="NUMERIC(16,2)"/>
-            <column name="description" type="MEDIUMTEXT"/>
-            <column name="last_author_id" type="uuid"/>
-            <column name="last_modified_date" type="timestamp(6) with time zone"/>
-            <column name="version" type="integer"/>
-        </createTable>
-    </changeSet>
+        <changeSet id="createPriceListTable" author="kolivim">
+            <preConditions onFail="MARK_RAN">
+                <not>
+                    <tableExists tableName="price_list"/>
+                </not>
+            </preConditions>
+            <createTable tableName="price_list">
+                <column name="id" type="uuid">
+                    <constraints primaryKey="true" nullable="false" />
+                </column>
+                <column name="is_deleted" type="boolean"/>
+                <column name="type" type="integer"/>            <!-- Work, Material, etc -->
+                <column name="name" type="varchar(255)"/>
+                <column name="description" type="MEDIUMTEXT"/>
+                <column name="last_author_id" type="uuid"/>
+                <column name="last_modified_date" type="timestamp(6) with time zone"/>
+                <column name="version" type="integer"/>
+            </createTable>
+        </changeSet>
 
-    <changeSet id="createMaterialPriceListTable" author="kolivim">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="material_price_list"/>
-            </not>
-        </preConditions>
-        <createTable tableName="material_price_list">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" />
-            </column>
-            <column name="is_deleted" type="boolean"/>
-            <column name="name" type="varchar(255)"/>
-            <column name="description" type="MEDIUMTEXT"/>
-            <column name="last_author_id" type="uuid"/>
-            <column name="last_modified_date" type="timestamp(6) with time zone"/>
-            <column name="version" type="integer"/>
-        </createTable>
-    </changeSet>
+        <changeSet id="createPriceTable" author="kolivim">
+            <preConditions onFail="MARK_RAN">
+                <not>
+                    <tableExists tableName="price"/>
+                </not>
+            </preConditions>
+            <createTable tableName="price">
+                <column name="id" type="uuid">
+                    <constraints primaryKey="true" nullable="false" />
+                </column>
+                <column name="is_deleted" type="boolean"/>
+                <column name="price_list_id" type="uuid"/>
+                <column name="name" type="varchar(255)"/>
+                <column name="price" type="NUMERIC(16,2)"/>
+                <column name="description" type="MEDIUMTEXT"/>
+                <column name="last_author_id" type="uuid"/>
+                <column name="last_modified_date" type="timestamp(6) with time zone"/>
+                <column name="version" type="integer"/>
+            </createTable>
+        </changeSet>
 
-    <changeSet id="createMaterialPricingTable" author="kolivim">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="material_pricing"/>
-            </not>
-        </preConditions>
-        <createTable tableName="material_pricing">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" />
-            </column>
-            <column name="is_deleted" type="boolean"/>
-            <column name="price_list_id" type="uuid"/>
-            <column name="name" type="varchar(255)"/>
-            <column name="price" type="NUMERIC(16,2)"/>
-            <column name="description" type="MEDIUMTEXT"/>
-            <column name="last_author_id" type="uuid"/>
-            <column name="last_modified_date" type="timestamp(6) with time zone"/>
-            <column name="version" type="integer"/>
-        </createTable>
-    </changeSet>
+<!--    <changeSet id="createWorkPriceListTable" author="kolivim">-->
+<!--        <preConditions onFail="MARK_RAN">-->
+<!--            <not>-->
+<!--                <tableExists tableName="work_price_list"/>-->
+<!--            </not>-->
+<!--        </preConditions>-->
+<!--        <createTable tableName="work_price_list">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false" />-->
+<!--            </column>-->
+<!--            <column name="is_deleted" type="boolean"/>-->
+<!--            <column name="name" type="varchar(255)"/>-->
+<!--            <column name="description" type="MEDIUMTEXT"/>-->
+<!--            <column name="last_author_id" type="uuid"/>-->
+<!--            <column name="last_modified_date" type="timestamp(6) with time zone"/>-->
+<!--            <column name="version" type="integer"/>-->
+<!--        </createTable>-->
+<!--    </changeSet>-->
 
+<!--    <changeSet id="createWorkPricingTable" author="kolivim">-->
+<!--        <preConditions onFail="MARK_RAN">-->
+<!--            <not>-->
+<!--                <tableExists tableName="work_pricing"/>-->
+<!--            </not>-->
+<!--        </preConditions>-->
+<!--        <createTable tableName="work_pricing">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false" />-->
+<!--            </column>-->
+<!--            <column name="is_deleted" type="boolean"/>-->
+<!--            <column name="price_list_id" type="uuid"/>-->
+<!--            <column name="name" type="varchar(255)"/>-->
+<!--            <column name="price" type="NUMERIC(16,2)"/>-->
+<!--            <column name="description" type="MEDIUMTEXT"/>-->
+<!--            <column name="last_author_id" type="uuid"/>-->
+<!--            <column name="last_modified_date" type="timestamp(6) with time zone"/>-->
+<!--            <column name="version" type="integer"/>-->
+<!--        </createTable>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="createMaterialPriceListTable" author="kolivim">-->
+<!--        <preConditions onFail="MARK_RAN">-->
+<!--            <not>-->
+<!--                <tableExists tableName="material_price_list"/>-->
+<!--            </not>-->
+<!--        </preConditions>-->
+<!--        <createTable tableName="material_price_list">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false" />-->
+<!--            </column>-->
+<!--            <column name="is_deleted" type="boolean"/>-->
+<!--            <column name="name" type="varchar(255)"/>-->
+<!--            <column name="description" type="MEDIUMTEXT"/>-->
+<!--            <column name="last_author_id" type="uuid"/>-->
+<!--            <column name="last_modified_date" type="timestamp(6) with time zone"/>-->
+<!--            <column name="version" type="integer"/>-->
+<!--        </createTable>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="createMaterialPricingTable" author="kolivim">-->
+<!--        <preConditions onFail="MARK_RAN">-->
+<!--            <not>-->
+<!--                <tableExists tableName="material_pricing"/>-->
+<!--            </not>-->
+<!--        </preConditions>-->
+<!--        <createTable tableName="material_pricing">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false" />-->
+<!--            </column>-->
+<!--            <column name="is_deleted" type="boolean"/>-->
+<!--            <column name="price_list_id" type="uuid"/>-->
+<!--            <column name="name" type="varchar(255)"/>-->
+<!--            <column name="price" type="NUMERIC(16,2)"/>-->
+<!--            <column name="description" type="MEDIUMTEXT"/>-->
+<!--            <column name="last_author_id" type="uuid"/>-->
+<!--            <column name="last_modified_date" type="timestamp(6) with time zone"/>-->
+<!--            <column name="version" type="integer"/>-->
+<!--        </createTable>-->
+<!--    </changeSet>-->
 
 </databaseChangeLog>
 
