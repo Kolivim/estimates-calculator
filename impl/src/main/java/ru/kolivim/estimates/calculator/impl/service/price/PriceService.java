@@ -6,13 +6,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolivim.estimates.calculator.api.dto.price.PriceDto;
 import ru.kolivim.estimates.calculator.api.dto.price.PriceListDto;
+import ru.kolivim.estimates.calculator.api.dto.price.PriceListTypeDto;
 import ru.kolivim.estimates.calculator.domain.price.Price;
 import ru.kolivim.estimates.calculator.domain.price.PriceList;
+import ru.kolivim.estimates.calculator.domain.price.PriceListType;
 import ru.kolivim.estimates.calculator.impl.exception.PriceException;
 import ru.kolivim.estimates.calculator.impl.exception.PriceListException;
+import ru.kolivim.estimates.calculator.impl.exception.PriceListTypeException;
 import ru.kolivim.estimates.calculator.impl.exception.UserException;
 import ru.kolivim.estimates.calculator.impl.mapper.price.PriceMapper;
 import ru.kolivim.estimates.calculator.impl.repository.price.PriceListRepository;
+import ru.kolivim.estimates.calculator.impl.repository.price.PriceListTypeRepository;
 import ru.kolivim.estimates.calculator.impl.repository.price.PriceRepository;
 
 @Slf4j
@@ -24,15 +28,61 @@ public class PriceService {
 //    private final AccountService accountService;
     private final PriceMapper priceMapper;
 
+    private final PriceListTypeRepository priceListTypeRepository;
     private final PriceListRepository priceListRepository;
     private final PriceRepository priceRepository;
 
 
     /** TODO: Может переписать на компоненты??? */
 
+    /** Ниже по Price-list type: */
+    public PriceListTypeDto createPriceListType(PriceListTypeDto priceListTypeDto) throws PriceListTypeException {
+        log.info("PriceService:createPriceListType(PriceListTypeDto priceListTypeDto) startMethod, PriceListTypeDto: {}",
+                priceListTypeDto);
+        getCheksAllPriceListTypeInfo(priceListTypeDto);
+
+//        Integer lastTypePriceList = priceListTypeRepository.lastTypePriceList();
+//        if (lastTypePriceList == null) {lastTypePriceList = 1;}
+
+        Integer addTypePriceList = getLastTypePriceList();
+        addTypePriceList++;
+        priceListTypeDto.setType(addTypePriceList);
+
+        PriceListType priceListType = save(priceMapper.toPriceListType(priceListTypeDto));
+        return priceMapper.toPriceListTypeDto(priceListType);
+    }
+
+    private Integer getLastTypePriceList() {
+        log.info("PriceService:getLastTypePriceList() startMethod");
+        Integer lastTypePriceList = priceListTypeRepository.lastTypePriceList();
+        if (lastTypePriceList == null) {lastTypePriceList = 1;}
+        log.info("PriceService:getLastTypePriceList() endMethod, получен lastTypePriceList = {}", lastTypePriceList );
+        return lastTypePriceList;
+    }
+
+    private PriceListType save(PriceListType priceListType) {
+        log.info("PriceService:save(PriceListType toPriceListType) startMethod, PriceListType: {}", priceListType);
+        return priceListTypeRepository.save(priceListType);
+    }
+
+    private void getCheksAllPriceListTypeInfo(PriceListTypeDto priceListTypeDto) {
+        log.info("PriceService:getCheksAllPriceListTypeInfo(PriceListTypeDto priceListTypeDto) startMethod, PriceListTypeDto: {}",
+                priceListTypeDto);
+        getErrorIfNull(priceListTypeDto);
+        getErrorIfNamePriceListTypeExist(priceListTypeDto);
+    }
+
+    private void getErrorIfNamePriceListTypeExist(PriceListTypeDto priceListTypeDto) {
+        log.info("PriceService:getErrorIfNamePriceListTypeExist(PriceListTypeDto priceListTypeDto) startMethod, PriceListDto: {}",
+                priceListTypeDto);
+        if (priceListTypeRepository.existsByName(priceListTypeDto.getName())) {
+            throw new PriceListException("PriceListType с таким именем уже существует");
+        }
+    }
+
     /** Ниже по Price-list: */
 
-    public PriceListDto createPriceList(PriceListDto priceListDto) throws PriceException {
+    public PriceListDto createPriceList(PriceListDto priceListDto) throws PriceListException {
         log.info("PriceService:createPriceList(PriceListDto priceListDto) startMethod, PriceListDto: {}", priceListDto);
         getCheksAllPriceListInfo(priceListDto);
         PriceList priceList = save(priceMapper.toPriceList(priceListDto));

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolivim.estimates.calculator.api.dto.price.PriceDto;
+import ru.kolivim.estimates.calculator.api.dto.price.PriceListDto;
+import ru.kolivim.estimates.calculator.api.dto.price.PriceListTypeDto;
 import ru.kolivim.estimates.calculator.api.dto.user.UserDto;
 
 import javax.security.auth.login.AccountException;
@@ -19,5 +21,8 @@ public interface PriceResource {
 
     @PostMapping()
     public ResponseEntity<PriceDto> createPrice(@RequestBody PriceDto priceDto) throws AccountException /*PriceException*/ ;
-
+    @PostMapping("/pricelist")
+    ResponseEntity<PriceListDto> createPriceList(@RequestBody PriceListDto priceListDto) throws AccountException;
+    @PostMapping("/pricelisttype")
+    ResponseEntity<PriceListTypeDto> createPriceListType(@RequestBody PriceListTypeDto priceListTypeDto) throws AccountException;
 }

@@ -7,8 +7,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.stereotype.Component;
 import ru.kolivim.estimates.calculator.api.dto.price.PriceDto;
 import ru.kolivim.estimates.calculator.api.dto.price.PriceListDto;
+import ru.kolivim.estimates.calculator.api.dto.price.PriceListTypeDto;
 import ru.kolivim.estimates.calculator.domain.price.Price;
 import ru.kolivim.estimates.calculator.domain.price.PriceList;
+import ru.kolivim.estimates.calculator.domain.price.PriceListType;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -20,6 +22,39 @@ import java.util.UUID;
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public abstract class PriceMapper {
     private static final UUID SYSTEM_UUID = UUID.fromString("2788e7e3-9e0c-47ea-8798-e987c7d9ab4f");
+
+    public PriceListType toPriceListType(PriceListTypeDto priceListTypeDto) {
+        log.info("PriceMapper:toPriceListType(PriceListTypeDto priceListTypeDto) startMethod - получен PriceListTypeDto: {}",
+                priceListTypeDto);
+
+        PriceListType priceListType = new PriceListType();
+        priceListType.setIsDeleted(false);
+        priceListType.setName(priceListTypeDto.getName());
+        priceListType.setType(priceListTypeDto.getType()); /** Берем последнюю запись type в таблице и прибавляем 1 */
+        priceListType.setDescription(priceListTypeDto.getDescription());
+        priceListType.setLastAuthorId(SYSTEM_UUID); // TODO: Исправить и внести корректный юид вносящего позицию вместо системного
+        priceListType.setLastModifiedDate(ZonedDateTime.now());
+        priceListType.setVersion(1);
+
+        log.info("PriceMapper:toPriceListType(PriceListTypeDto priceListTypeDto) endMethod - получен к возврату PriceListType: {}",
+                priceListType);
+        return priceListType;
+    }
+
+
+    public PriceListTypeDto toPriceListTypeDto(PriceListType priceListType) {
+        log.info("PriceMapper:toPriceListTypeDto(PriceListType priceListType) startMethod - получен PriceListType: {}",
+                priceListType);
+
+        PriceListTypeDto priceListTypeDto = new PriceListTypeDto();
+        priceListTypeDto.setDescription(priceListType.getDescription());
+        priceListTypeDto.setType(priceListType.getType());
+        priceListTypeDto.setName(priceListType.getName());
+
+        log.info("PriceMapper:toPriceListTypeDto(PriceListType priceListType) startMethod - получен к возврату PriceListTypeDto: {}",
+                priceListTypeDto);
+        return priceListTypeDto;
+    }
 
     public PriceList toPriceList(PriceListDto priceListDto) {
         log.info("PriceMapper:toPriceList(PriceListDto priceListDto) startMethod - получен PriceListDto: {}", priceListDto);
