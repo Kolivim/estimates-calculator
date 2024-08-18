@@ -105,9 +105,9 @@ public class PriceService {
 
     private void getErrorIfPriceListTypeNotExist(PriceListDto priceListDto) {
         log.info("PriceService:getErrorIfPriceListTypeNotExist(PriceListDto priceListDto) startMethod, PriceListDto: {}", priceListDto);
-//        if (userRepository.existsByLogin(userDto.getLogin())) {
-//            throw new UserException("Пользователь с таким login уже существует");   // TODO: Исправить проверку на валидную
-//        }
+        if (!priceListTypeRepository.existsByType(priceListDto.getType())) {
+            throw new PriceListTypeException("Указанный PriceListType не существует");   // TODO: Проверить верно ли выполнил проверку
+        }
     }
 
     private PriceList save(PriceList priceList) {

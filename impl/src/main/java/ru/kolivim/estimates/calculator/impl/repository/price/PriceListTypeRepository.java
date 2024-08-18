@@ -9,6 +9,8 @@ public interface PriceListTypeRepository extends BaseRepository<PriceListType> {
 
     Boolean existsByName(String name);
 
+    Boolean existsByType(Integer type);
+
     @Query(value = "SELECT MAX(type) FROM type_price_list", nativeQuery = true)
     Integer lastTypePriceList();
 }
