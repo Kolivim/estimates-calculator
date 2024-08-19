@@ -44,8 +44,9 @@
             </column>
             <column name="is_deleted" type="boolean"/>
 
-            <column name="works_name" type="varchar(255)"/>
-            <column name="unit_measurement" type="varchar(255)"/>
+            <column name="works_name" type="varchar(255)"/>                 <!-- По идее вынести и заменить на id записи работы из price ??? -->
+            <column name="unit_measurement" type="varchar(255)"/>           <!-- По идее вынести в price ??? -->
+
             <column name="revision" type="varchar(255)"/>
             <column name="is_parent" type="boolean"/>
             <column name="parent_id" type="uuid"/>
@@ -74,8 +75,9 @@
             <column name="is_deleted" type="boolean"/>
 
             <column name="id_element" type="varchar(255)"/>                 <!-- Не помню точно - что ли поле id в таблице elements ??? -->
-            <column name="material_name" type="varchar(255)"/>
-            <column name="unit_measurement" type="varchar(255)"/>
+
+            <column name="material_name" type="varchar(255)"/>              <!-- По идее вынести и заменить на id записи материала из price ??? -->
+            <column name="unit_measurement" type="varchar(255)"/>           <!-- По идее вынести в price ??? -->
 
             <column name="consumption_rate" type="NUMERIC(16,2)"/>         <!--Где не задействовано принимать =1 и тоже умножать -->
             <column name="reduction_factor" type="NUMERIC(16,2)"/>         <!--Где не задействовано принимать =1 и тоже умножать -->
