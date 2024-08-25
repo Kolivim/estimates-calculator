@@ -27,6 +27,9 @@ public class Price extends BaseEntity {
     @Column(name="price")
     private Double price;
 
+    @Column(name="unit_measurement")
+    private String unitMeasurement;
+
     @Column(name="description")
     private String description;
 

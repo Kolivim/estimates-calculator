@@ -10,6 +10,7 @@ public class PriceDto {
     UUID priceListId;
     String name;
     Double price;
+    String unitMeasurement;
     String description;
 
 }

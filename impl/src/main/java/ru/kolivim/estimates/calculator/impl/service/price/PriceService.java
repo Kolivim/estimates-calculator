@@ -55,7 +55,7 @@ public class PriceService {
     private Integer getLastTypePriceList() {
         log.info("PriceService:getLastTypePriceList() startMethod");
         Integer lastTypePriceList = priceListTypeRepository.lastTypePriceList();
-        if (lastTypePriceList == null) {lastTypePriceList = 1;}
+        if (lastTypePriceList == null) {lastTypePriceList = 0;}
         log.info("PriceService:getLastTypePriceList() endMethod, получен lastTypePriceList = {}", lastTypePriceList );
         return lastTypePriceList;
     }

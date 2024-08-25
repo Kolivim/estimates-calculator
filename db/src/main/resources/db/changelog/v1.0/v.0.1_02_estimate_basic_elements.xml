@@ -44,8 +44,8 @@
             </column>
             <column name="is_deleted" type="boolean"/>
 
-            <column name="works_name" type="varchar(255)"/>                 <!-- По идее вынести и заменить на id записи работы из price ??? -->
-            <column name="unit_measurement" type="varchar(255)"/>           <!-- По идее вынести в price ??? -->
+            <column name="works_id" type="uuid"/>                 <!-- По идее вынести и заменить на id записи работы из price ??? column name="works_name" type="varchar(255)" -->
+<!--            <column name="unit_measurement" type="varchar(255)"/>           &lt;!&ndash; По идее вынести в price ??? &ndash;&gt;-->
 
             <column name="revision" type="varchar(255)"/>
             <column name="is_parent" type="boolean"/>
@@ -76,8 +76,8 @@
 
             <column name="id_element" type="varchar(255)"/>                 <!-- Не помню точно - что ли поле id в таблице elements ??? -->
 
-            <column name="material_name" type="varchar(255)"/>              <!-- По идее вынести и заменить на id записи материала из price ??? -->
-            <column name="unit_measurement" type="varchar(255)"/>           <!-- По идее вынести в price ??? -->
+            <column name="material_id" type="uuid"/>                        <!-- По идее вынести и заменить на id записи материала из price ??? column name="material_name" type="varchar(255)" -->
+<!--            <column name="unit_measurement" type="varchar(255)"/>           &lt;!&ndash; По идее вынести в price ??? &ndash;&gt;-->
 
             <column name="consumption_rate" type="NUMERIC(16,2)"/>         <!--Где не задействовано принимать =1 и тоже умножать -->
             <column name="reduction_factor" type="NUMERIC(16,2)"/>         <!--Где не задействовано принимать =1 и тоже умножать -->
@@ -144,6 +144,7 @@
                 <column name="price_list_id" type="uuid"/>
                 <column name="name" type="varchar(255)"/>
                 <column name="price" type="NUMERIC(16,2)"/>
+                <column name="unit_measurement" type="varchar(255)"/>
                 <column name="description" type="MEDIUMTEXT"/>
                 <column name="last_author_id" type="uuid"/>
                 <column name="last_modified_date" type="timestamp(6) with time zone"/>

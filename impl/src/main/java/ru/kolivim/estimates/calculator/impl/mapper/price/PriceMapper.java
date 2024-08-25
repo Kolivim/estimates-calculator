@@ -92,6 +92,7 @@ public abstract class PriceMapper {
         price.setPriceListId(priceDto.getPriceListId());
         price.setName(priceDto.getName());
         price.setPrice(priceDto.getPrice());
+        price.setUnitMeasurement(priceDto.getUnitMeasurement());
         price.setDescription(priceDto.getDescription());
         price.setLastAuthorId(SYSTEM_UUID); // TODO: Исправить и внести корректный юид вносящего позицию вместо системного
         price.setLastModifiedDate(ZonedDateTime.now());
@@ -108,6 +109,7 @@ public abstract class PriceMapper {
         priceDto.setPriceListId(price.getPriceListId());
         priceDto.setName(price.getName());
         priceDto.setPrice(price.getPrice());
+        priceDto.setUnitMeasurement(price.getUnitMeasurement());
         priceDto.setDescription(price.getDescription());
 
         log.info("PriceMapper:toPriceDto(Price price) endMethod - получен к возврату PriceDto: {}", priceDto);
