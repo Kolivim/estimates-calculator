@@ -29,7 +29,7 @@ public class Element extends BaseEntity {
     @Column(name="parent_id")
     private UUID parentId;
 
-    @Column(name="group")
+    @Column(name="\"group\"")
     private Integer group;
 
     @Column(name="work_price_list")

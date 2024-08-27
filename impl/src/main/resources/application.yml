@@ -17,7 +17,7 @@ spring:
     driverClassName: org.postgresql.Driver
 
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
 #      ddl-auto: create
       ddl-auto: none
@@ -25,12 +25,31 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        show_sql: true
     open-in-view: false
 
     org:
-      springframework: ${LOG:info}
+      springframework: ${LOG:debug}
+#      springframework: ${LOG:info}
+
   file:
     name: logs/log
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: TRACE
+#        SQL: DEBUG
+        orm:
+          jdbc:
+            bind: TRACE
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+  file:
+    name: my.log
 
 #security:
 #  enabled: true
