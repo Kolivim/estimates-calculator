@@ -9,9 +9,11 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.stereotype.Component;
 import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.Status;
 import ru.kolivim.estimates.calculator.api.dto.price.PriceListTypeDto;
 import ru.kolivim.estimates.calculator.domain.estimate.Element;
+import ru.kolivim.estimates.calculator.domain.estimate.MaterialElement;
 import ru.kolivim.estimates.calculator.domain.price.PriceListType;
 
 import java.time.ZonedDateTime;
@@ -74,30 +76,49 @@ public abstract class ElementMapper {
     }
 
 
-        /*
-        private UUID worksId;
-        private Boolean isParent;
-        private UUID parentId;
-        private Integer group;
-        private UUID workPriceListId;
-        private UUID materialPriceListId;
-        private String description;
-        private Status status;
-        */
+    /** Ниже по material_element: */
 
-        /*
-        private UUID worksId;
-        private String revision;
-        private Boolean isParent;
-        private UUID parentId;
-        private Integer group;
-        private UUID workPriceListId;
-        private UUID materialPriceListId;
-        private String description;
-        private UUID lastAuthorId;
-        private ZonedDateTime lastModifiedDate;
-        private Integer version;
-        private Status status;
-        */
+    public MaterialElement toMaterialElement(MaterialElementDto materialElementDto) {
+        log.info("ElementMapper:toMaterialElement(MaterialElementDto materialElementDto) startMethod - получен MaterialElementDto: {}", materialElementDto);
+
+        MaterialElement materialElement = new MaterialElement();
+        materialElement.setIsDeleted(materialElementDto.getIsDeleted());
+        materialElement.setElementId(materialElementDto.getElementId());
+        materialElement.setMaterialId(materialElementDto.getMaterialId());
+        materialElement.setQuantity(materialElementDto.getQuantity());
+        materialElement.setConsumptionRate(materialElementDto.getConsumptionRate());
+        materialElement.setReductionFactor(materialElementDto.getReductionFactor());
+        materialElement.setNumberLayers(materialElementDto.getNumberLayers());
+        materialElement.setLayerThickness(materialElementDto.getLayerThickness());
+        materialElement.setDescription(materialElementDto.getDescription());
+        materialElement.setLastAuthorId(SYSTEM_UUID);   // TODO: Исправить и внести корректный юид вносящего позицию вместо системного
+        materialElement.setLastModifiedDate(ZonedDateTime.now());
+
+        log.info("ElementMapper:toMaterialElement(MaterialElementDto materialElementDto) endMethod - получен к возврату MaterialElement: {}", materialElement);
+
+        return materialElement;
+    }
+
+
+    public MaterialElementDto toMaterialElementDto(MaterialElement materialElement) {
+        log.info("ElementMapper:toMaterialElementDto(MaterialElement materialElement) startMethod - получен MaterialElement: {}", materialElement);
+
+        MaterialElementDto materialElementDto = new MaterialElementDto();
+        materialElementDto.setIsDeleted(materialElement.getIsDeleted());
+        materialElementDto.setElementId(materialElement.getElementId());
+        materialElementDto.setMaterialId(materialElement.getMaterialId());
+        materialElementDto.setQuantity(materialElement.getQuantity());
+        materialElementDto.setConsumptionRate(materialElement.getConsumptionRate());
+        materialElementDto.setReductionFactor(materialElement.getReductionFactor());
+        materialElementDto.setNumberLayers(materialElement.getNumberLayers());
+        materialElementDto.setLayerThickness(materialElement.getLayerThickness());
+        materialElementDto.setDescription(materialElement.getDescription());
+        materialElementDto.setLastAuthorId(materialElement.getLastAuthorId());
+        materialElementDto.setLastModifiedDate(materialElement.getLastModifiedDate());
+
+        log.info("ElementMapper:toMaterialElementDto(MaterialElement materialElement) endMethod - получен к возврату MaterialElementDto: {}", materialElementDto);
+
+        return materialElementDto;
+    }
 
 }

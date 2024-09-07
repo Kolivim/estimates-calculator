@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
 import ru.kolivim.estimates.calculator.api.dto.price.PriceDto;
 
 import javax.security.auth.login.AccountException;
@@ -19,5 +20,8 @@ public interface EstimateResource {
 
     @PostMapping("/element")
     public ResponseEntity<ElementDto> createElement(@RequestBody ElementDto elementDto) throws AccountException /*ElementException*/ ;
+
+    @PostMapping("/materialelement")
+    public ResponseEntity<MaterialElementDto> createMaterialElement(@RequestBody MaterialElementDto materialElementDto) throws AccountException /*ElementException*/ ;
 
 }

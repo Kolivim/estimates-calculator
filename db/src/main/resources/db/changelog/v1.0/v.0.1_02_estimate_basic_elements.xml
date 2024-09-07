@@ -78,11 +78,12 @@
 
             <column name="material_id" type="uuid"/>                        <!-- По идее вынести и заменить на id записи материала из price ??? column name="material_name" type="varchar(255)" -->
 <!--            <column name="unit_measurement" type="varchar(255)"/>           &lt;!&ndash; По идее вынести в price ??? &ndash;&gt;-->
+            <column name="quantity" type="NUMERIC(16,2)"/>                  <!-- Количество требуемого материала -->
 
-            <column name="consumption_rate" type="NUMERIC(16,2)"/>         <!--Где не задействовано принимать =1 и тоже умножать -->
-            <column name="reduction_factor" type="NUMERIC(16,2)"/>         <!--Где не задействовано принимать =1 и тоже умножать -->
-            <column name="number_layers" type="NUMERIC(16,2)"/>            <!--Где не задействовано принимать =1 и тоже умножать -->
-            <column name="layer_thickness" type="NUMERIC(16,2)"/>          <!--Где не задействовано принимать =1 и тоже умножать -->
+            <column name="consumption_rate" type="NUMERIC(16,2)"/>          <!--Где не задействовано принимать =1 и тоже умножать -->
+            <column name="reduction_factor" type="NUMERIC(16,2)"/>          <!--Где не задействовано принимать =1 и тоже умножать -->
+            <column name="number_layers" type="NUMERIC(16,2)"/>             <!--Где не задействовано принимать =1 и тоже умножать -->
+            <column name="layer_thickness" type="NUMERIC(16,2)"/>           <!--Где не задействовано принимать =1 и тоже умножать -->
 
             <column name="description" type="MEDIUMTEXT"/>
             <column name="last_author_id" type="uuid"/>
