@@ -17,8 +17,10 @@ public interface ElementRepository extends BaseRepository<Element> {
     @Query(value = "SELECT MAX(version) FROM elements where works_id = :find_works_id and revision = :find_revision", nativeQuery = true)
     Integer lastWorkVersion(@Param("find_works_id") UUID worksId, @Param("find_revision") String revision);
     // @Query(value = "SELECT MAX(version) FROM elements where works_id = :find_works_id and revision = : find_revision"
+
 }
-/*
-  "worksId": "93a747a4-a7df-4056-8354-5e4327460007",
-  "revision": "2",
-* */
+
+    /**
+    "worksId": "93a747a4-a7df-4056-8354-5e4327460007",
+    "revision": "2",
+    */

@@ -9,10 +9,12 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.stereotype.Component;
 import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateElementDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.Status;
 import ru.kolivim.estimates.calculator.api.dto.price.PriceListTypeDto;
 import ru.kolivim.estimates.calculator.domain.estimate.Element;
+import ru.kolivim.estimates.calculator.domain.estimate.EstimateElement;
 import ru.kolivim.estimates.calculator.domain.estimate.MaterialElement;
 import ru.kolivim.estimates.calculator.domain.price.PriceListType;
 
@@ -121,4 +123,42 @@ public abstract class ElementMapper {
         return materialElementDto;
     }
 
+    public EstimateElement toEstimateElement(EstimateElementDto estimateElementDto) {
+        log.info("ElementMapper:toEstimateElement(EstimateElementDto estimateElementDto) startMethod - получен EstimateElementDto: {}", estimateElementDto);
+
+        EstimateElement estimateElement = new EstimateElement();
+        estimateElement.setIsDeleted(estimateElementDto.getIsDeleted());
+        estimateElement.setEstimateId(estimateElementDto.getEstimateId());
+        estimateElement.setElementId(estimateElementDto.getElementId());
+        estimateElement.setQuantity(estimateElementDto.getQuantity());
+        estimateElement.setWorkPriceListId(estimateElementDto.getWorkPriceListId());
+        estimateElement.setMaterialPriceListId(estimateElementDto.getMaterialPriceListId());
+        estimateElement.setDescription(estimateElementDto.getDescription());
+        estimateElement.setLastAuthorId(SYSTEM_UUID);   // TODO: Исправить и внести корректный юид вносящего позицию вместо системного
+        estimateElement.setLastModifiedDate(ZonedDateTime.now());
+        estimateElement.setStatus(estimateElementDto.getStatus());
+
+        log.info("ElementMapper:toEstimateElement(EstimateElementDto estimateElementDto) endMethod - получен к возврату EstimateElement: {}", estimateElement);
+        return estimateElement;
+    }
+
+    public EstimateElementDto toEstimateElementDto(EstimateElement estimateElement) {
+        log.info("ElementMapper:toEstimateElementDto(EstimateElement estimateElement) startMethod - получен EstimateElement: {}", estimateElement);
+
+        EstimateElementDto estimateElementDto = new EstimateElementDto();
+        estimateElementDto.setId(estimateElement.getId());
+        estimateElementDto.setIsDeleted(estimateElement.getIsDeleted());
+        estimateElementDto.setEstimateId(estimateElement.getEstimateId());
+        estimateElementDto.setElementId(estimateElement.getElementId());
+        estimateElementDto.setQuantity(estimateElement.getQuantity());
+        estimateElementDto.setWorkPriceListId(estimateElement.getWorkPriceListId());
+        estimateElementDto.setMaterialPriceListId(estimateElement.getMaterialPriceListId());
+        estimateElementDto.setDescription(estimateElement.getDescription());
+        estimateElementDto.setLastAuthorId(estimateElement.getLastAuthorId());
+        estimateElementDto.setLastModifiedDate(estimateElement.getLastModifiedDate());
+        estimateElementDto.setStatus(estimateElement.getStatus());
+
+        log.info("ElementMapper:toEstimateElementDto(EstimateElement estimateElement) endMethod - получен к возврату EstimateElementDto: {}", estimateElementDto);
+        return estimateElementDto;
+    }
 }

@@ -1,23 +1,27 @@
 package ru.kolivim.estimates.calculator.impl.service.estimate;
 
+import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateElementDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
-import ru.kolivim.estimates.calculator.api.dto.price.PriceDto;
 import ru.kolivim.estimates.calculator.domain.estimate.Element;
+import ru.kolivim.estimates.calculator.domain.estimate.EstimateElement;
 import ru.kolivim.estimates.calculator.domain.estimate.MaterialElement;
 import ru.kolivim.estimates.calculator.impl.exception.ElementException;
+import ru.kolivim.estimates.calculator.impl.exception.EstimateElementException;
 import ru.kolivim.estimates.calculator.impl.exception.MaterialElementException;
-import ru.kolivim.estimates.calculator.impl.exception.PriceException;
 import ru.kolivim.estimates.calculator.impl.mapper.element.ElementMapper;
 import ru.kolivim.estimates.calculator.impl.repository.element.ElementRepository;
+import ru.kolivim.estimates.calculator.impl.repository.element.EstimateElementRepository;
 import ru.kolivim.estimates.calculator.impl.repository.element.MaterialElementRepository;
 import ru.kolivim.estimates.calculator.impl.repository.price.PriceListRepository;
 import ru.kolivim.estimates.calculator.impl.repository.price.PriceRepository;
+
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -27,18 +31,94 @@ public class EstimateService {
 
     private final ElementMapper elementMapper;
 
+    private final EstimateElementRepository estimateElementRepository;
     private final ElementRepository elementRepository;
     private final PriceRepository priceRepository;
     private final PriceListRepository priceListRepository;
     private final MaterialElementRepository materialElementRepository;
 
 
+    /** Ниже по ??? таблице - для связи estimates с elements и указания количества работ, указанных
+     в elements, по которым уже можно посчитать саму смету: */
+
 
     /** Ниже по estimates: */
 
+    public EstimateElementDto createEstimate(/*EstimateDto estimateDto*/) {
+        return null;
+    }
 
-    /** Ниже по ??? таблице - для связи estimates с elements и указания количества работ, указанных
-        в elements, по которым уже можно посчитать саму смету: */
+
+    /** Ниже по estimateElement: */
+
+    public EstimateElementDto createEstimateElement(EstimateElementDto estimateElementDto) {
+        log.info("EstimateService:createEstimateElement(EstimateElementDto estimateElementDto) startMethod, EstimateElementDto: {}", estimateElementDto);
+
+        estimateElementDto.setIsDeleted(false);
+        getCheksAllEstimateElementInfo(estimateElementDto);
+
+        EstimateElement estimateElement = save(elementMapper.toEstimateElement(estimateElementDto));
+        return elementMapper.toEstimateElementDto(estimateElement);
+    }
+
+
+    private void getCheksAllEstimateElementInfo(EstimateElementDto estimateElementDto) {
+        log.info("EstimateService:etCheksAllEstimateElementInfo(EstimateElementDto estimateElementDto) startMethod, EstimateElementDto: {}", estimateElementDto);
+        getErrorIfNull(estimateElementDto);
+        getErrorIfPriceListsInfoNotValid(estimateElementDto.getWorkPriceListId(), estimateElementDto.getMaterialPriceListId()); // workPriceListId***  materialPriceListId***
+        getErrorIfEstimateElementInfoNotValid(estimateElementDto);     // estimateId** // elementId**  //quantity**
+    }
+
+
+    private void getErrorIfEstimateElementInfoNotValid(EstimateElementDto estimateElementDto) {
+        log.info("EstimateService:getErrorIfEstimateElementInfoNotValid(EstimateElementDto estimateElementDto) startMethod, EstimateElementDto: {}", estimateElementDto);
+
+        if (estimateElementDto.getEstimateId() != null) {
+            if(/*!estimateRepository.existsById(estimateElementDto.getEstimateId())*/ false) {    // TODO: дописать проверку после добавления репозитория и раскомментировать !!!
+                throw new EstimateElementException("Переданный EstimateId не существует");
+            }
+        } else {
+            throw new EstimateElementException("Передан пустой EstimateId");
+        }
+
+        if (estimateElementDto.getElementId() != null) {
+            if(!elementRepository.existsById(estimateElementDto.getElementId())) {
+                throw new EstimateElementException("Переданный ElementId не существует");
+            }
+        } else {
+            throw new EstimateElementException("Передан пустой ElementId");
+        }
+
+        if (estimateElementDto.getQuantity() <= 0 ) {
+                throw new EstimateElementException("Передано некорректное количество Quantity");
+        }
+
+    }
+
+
+    private void getErrorIfPriceListsInfoNotValid (UUID workPriceListId, UUID materialPriceListId) {
+        log.info("EstimateService:getErrorIfPriceListsInfoNotValid(UUID workPriceListId, UUID materialPriceListId) startMethod, " +
+                "workPriceListId: {}; materialPriceListId: {}", workPriceListId, materialPriceListId);
+
+        if (workPriceListId != null) {
+            if (!priceListRepository.existsById(workPriceListId)) {
+                throw new ElementException("Переданный WorkPriceList не существует");
+            }
+        }
+
+        if (materialPriceListId != null) {
+            if (!priceListRepository.existsById(materialPriceListId)) {
+                throw new ElementException("Переданный MaterialPriceList не существует");
+            }
+        }
+
+    }
+
+
+    private EstimateElement save(EstimateElement estimateElement) {
+        log.info("EstimateService:save(EstimateElement estimateElement) startMethod, EstimateElement: {}", estimateElement);
+        return estimateElementRepository.save(estimateElement);
+    }
 
 
     /** Ниже по elements: */
@@ -233,6 +313,7 @@ public class EstimateService {
         log.info("EstimateService:save(MaterialElement materialElement) startMethod, MaterialElement: {}", materialElement);
         return materialElementRepository.save(materialElement);
     }
+
 
 }
 
