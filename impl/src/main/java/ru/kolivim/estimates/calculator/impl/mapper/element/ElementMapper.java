@@ -8,12 +8,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.stereotype.Component;
-import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
-import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateElementDto;
-import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
-import ru.kolivim.estimates.calculator.api.dto.estimate.Status;
+import ru.kolivim.estimates.calculator.api.dto.estimate.*;
 import ru.kolivim.estimates.calculator.api.dto.price.PriceListTypeDto;
 import ru.kolivim.estimates.calculator.domain.estimate.Element;
+import ru.kolivim.estimates.calculator.domain.estimate.Estimate;
 import ru.kolivim.estimates.calculator.domain.estimate.EstimateElement;
 import ru.kolivim.estimates.calculator.domain.estimate.MaterialElement;
 import ru.kolivim.estimates.calculator.domain.price.PriceListType;
@@ -161,4 +159,42 @@ public abstract class ElementMapper {
         log.info("ElementMapper:toEstimateElementDto(EstimateElement estimateElement) endMethod - получен к возврату EstimateElementDto: {}", estimateElementDto);
         return estimateElementDto;
     }
+
+    public Estimate toEstimate(EstimateDto estimateDto) {
+        log.info("ElementMapper:toEstimate(EstimateDto estimateDto) startMethod - получен EstimateDto: {}", estimateDto);
+
+        Estimate estimate = new Estimate();
+        estimate.setIsDeleted(estimateDto.getIsDeleted());
+        estimate.setName(estimateDto.getName());
+        estimate.setWorkPriceListId(estimateDto.getWorkPriceListId());
+        estimate.setMaterialPriceListId(estimateDto.getMaterialPriceListId());
+        estimate.setDescription(estimateDto.getDescription());
+        estimate.setLastAuthorId(SYSTEM_UUID);   // TODO: Исправить и внести корректный юид вносящего позицию вместо системного
+        estimate.setLastModifiedDate(ZonedDateTime.now());
+        estimate.setVersion(estimateDto.getVersion());
+        estimate.setStatus(estimateDto.getStatus());
+
+        log.info("ElementMapper:toEstimate(EstimateDto estimateDto) endMethod - получен к возврату Estimate: {}", estimate);
+        return estimate;
+    }
+
+    public EstimateDto toEstimateDto(Estimate estimate) {
+        log.info("ElementMapper:toEstimateDto(Estimate estimate) startMethod - получен Estimate: {}", estimate);
+
+        EstimateDto estimateDto = new EstimateDto();
+        estimateDto.setId(estimate.getId());
+        estimateDto.setIsDeleted(estimate.getIsDeleted());
+        estimateDto.setName(estimate.getName());
+        estimateDto.setWorkPriceListId(estimate.getWorkPriceListId());
+        estimateDto.setMaterialPriceListId(estimate.getMaterialPriceListId());
+        estimateDto.setDescription(estimate.getDescription());
+        estimateDto.setLastAuthorId(estimate.getLastAuthorId());
+        estimateDto.setLastModifiedDate(estimate.getLastModifiedDate());
+        estimateDto.setVersion(estimate.getVersion());
+        estimateDto.setStatus(estimate.getStatus());
+
+        log.info("ElementMapper:toEstimateDto(Estimate estimate) endMethod - получен к возврату EstimateDto: {}", estimateDto);
+        return estimateDto;
+    }
+
 }

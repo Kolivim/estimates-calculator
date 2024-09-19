@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateElementDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
 
@@ -26,4 +27,8 @@ public interface EstimateResource {
 
     @PostMapping("/estimateelement")
     public ResponseEntity<EstimateElementDto> createEstimateElement(@RequestBody EstimateElementDto estimateElementDto) throws AccountException /*ElementException*/ ;
+
+    @PostMapping("")
+    public ResponseEntity<EstimateDto> createEstimate(@RequestBody EstimateDto estimateDto) throws AccountException /*ElementException*/ ;
+
 }

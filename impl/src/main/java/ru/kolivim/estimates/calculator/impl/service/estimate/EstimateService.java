@@ -6,17 +6,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateElementDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
 import ru.kolivim.estimates.calculator.domain.estimate.Element;
+import ru.kolivim.estimates.calculator.domain.estimate.Estimate;
 import ru.kolivim.estimates.calculator.domain.estimate.EstimateElement;
 import ru.kolivim.estimates.calculator.domain.estimate.MaterialElement;
 import ru.kolivim.estimates.calculator.impl.exception.ElementException;
 import ru.kolivim.estimates.calculator.impl.exception.EstimateElementException;
+import ru.kolivim.estimates.calculator.impl.exception.EstimateException;
 import ru.kolivim.estimates.calculator.impl.exception.MaterialElementException;
 import ru.kolivim.estimates.calculator.impl.mapper.element.ElementMapper;
 import ru.kolivim.estimates.calculator.impl.repository.element.ElementRepository;
 import ru.kolivim.estimates.calculator.impl.repository.element.EstimateElementRepository;
+import ru.kolivim.estimates.calculator.impl.repository.element.EstimateRepository;
 import ru.kolivim.estimates.calculator.impl.repository.element.MaterialElementRepository;
 import ru.kolivim.estimates.calculator.impl.repository.price.PriceListRepository;
 import ru.kolivim.estimates.calculator.impl.repository.price.PriceRepository;
@@ -31,6 +35,7 @@ public class EstimateService {
 
     private final ElementMapper elementMapper;
 
+    private final EstimateRepository estimateRepository;
     private final EstimateElementRepository estimateElementRepository;
     private final ElementRepository elementRepository;
     private final PriceRepository priceRepository;
@@ -44,8 +49,46 @@ public class EstimateService {
 
     /** Ниже по estimates: */
 
-    public EstimateElementDto createEstimate(/*EstimateDto estimateDto*/) {
-        return null;
+    public EstimateDto createEstimate(EstimateDto estimateDto) {
+        log.info("EstimateService:createEstimate(EstimateDto estimateDto) startMethod, EstimateDto: {}", estimateDto);
+
+        estimateDto.setIsDeleted(false);
+        getCheksAllEstimateInfo(estimateDto);
+
+        Estimate estimate = save(elementMapper.toEstimate(estimateDto));
+        return elementMapper.toEstimateDto(estimate);
+    }
+
+
+    private Estimate save(Estimate estimate) {
+        log.info("EstimateService:save(Estimate estimate) startMethod, Estimate: {}", estimate);
+        return estimateRepository.save(estimate);
+    }
+
+
+    private void getCheksAllEstimateInfo(EstimateDto estimateDto) {
+        log.info("EstimateService:getCheksAllEstimateInfo(EstimateDto estimateDto) startMethod, EstimateDto: {}", estimateDto);
+        getErrorIfNull(estimateDto);
+        getErrorIfPriceListsInfoNotValid(estimateDto.getWorkPriceListId(), estimateDto.getMaterialPriceListId());   /** workPriceListId++  materialPriceListId++ */
+        getErrorIfEstimateInfoNotValid(estimateDto);    /** name+ */
+    }
+
+
+    private void getErrorIfEstimateInfoNotValid(EstimateDto estimateDto) {
+        log.info("EstimateService:getErrorIfEstimateInfoNotValid(EstimateDto estimateDto) startMethod, EstimateDto: {}", estimateDto);
+
+        if (estimateDto.getWorkPriceListId() == null || estimateDto.getMaterialPriceListId() == null) {
+            throw new ElementException("Не передан WorkPriceList/MaterialPriceList");
+        }
+
+        if (estimateDto.getName() == null) {
+                throw new EstimateException("Не передано поле name");
+        } else {
+            if(estimateDto.getName().trim().isBlank() || estimateDto.getName().trim().isEmpty()) {
+                throw new EstimateException("Передано некорректное значение поля name");
+            }
+        }
+
     }
 
 
@@ -74,7 +117,7 @@ public class EstimateService {
         log.info("EstimateService:getErrorIfEstimateElementInfoNotValid(EstimateElementDto estimateElementDto) startMethod, EstimateElementDto: {}", estimateElementDto);
 
         if (estimateElementDto.getEstimateId() != null) {
-            if(/*!estimateRepository.existsById(estimateElementDto.getEstimateId())*/ false) {    // TODO: дописать проверку после добавления репозитория и раскомментировать !!!
+            if(!estimateRepository.existsById(estimateElementDto.getEstimateId())) {
                 throw new EstimateElementException("Переданный EstimateId не существует");
             }
         } else {

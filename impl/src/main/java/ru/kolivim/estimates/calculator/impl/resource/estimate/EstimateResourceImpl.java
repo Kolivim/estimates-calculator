@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateElementDto;
 import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
 import ru.kolivim.estimates.calculator.api.resource.estimate.EstimateResource;
@@ -31,6 +32,11 @@ public class EstimateResourceImpl implements EstimateResource {
     @Override
     public ResponseEntity<EstimateElementDto> createEstimateElement(EstimateElementDto estimateElementDto) throws AccountException {
         return ResponseEntity.ok(estimateService.createEstimateElement(estimateElementDto));
+    }
+
+    @Override
+    public ResponseEntity<EstimateDto> createEstimate(EstimateDto estimateDto) throws AccountException {
+        return ResponseEntity.ok(estimateService.createEstimate(estimateDto));
     }
 
 }
