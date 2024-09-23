@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kolivim.estimates.calculator.api.dto.user.UserDto;
 import ru.kolivim.estimates.calculator.impl.service.user.UserService;
 //import ru.kolivim.estimates.calculator.api.dto.auth.JwtDto;
-import ru.kolivim.estimates.calculator.api.resource.user.UserResource;
+import ru.kolivim.estimates.calculator.api.resource.account.user.UserResource;
 
 import javax.security.auth.login.AccountException;
 import java.util.UUID;

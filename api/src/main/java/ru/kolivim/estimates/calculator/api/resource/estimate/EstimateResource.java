@@ -2,16 +2,11 @@ package ru.kolivim.estimates.calculator.api.resource.estimate;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
-import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateDto;
-import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateElementDto;
-import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
+import org.springframework.web.bind.annotation.*;
+import ru.kolivim.estimates.calculator.api.dto.estimate.*;
 
 import javax.security.auth.login.AccountException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/estimate")
@@ -30,5 +25,8 @@ public interface EstimateResource {
 
     @PostMapping("")
     public ResponseEntity<EstimateDto> createEstimate(@RequestBody EstimateDto estimateDto) throws AccountException /*ElementException*/ ;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EstimateInfo> getEstimate(@PathVariable UUID id) throws AccountException;
 
 }

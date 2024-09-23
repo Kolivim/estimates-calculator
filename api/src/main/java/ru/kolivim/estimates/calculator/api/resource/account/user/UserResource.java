@@ -1,4 +1,4 @@
-package ru.kolivim.estimates.calculator.api.resource.user;
+package ru.kolivim.estimates.calculator.api.resource.account.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

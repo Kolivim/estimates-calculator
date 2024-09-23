@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolivim.estimates.calculator.api.dto.estimate.ElementDto;
-import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateDto;
-import ru.kolivim.estimates.calculator.api.dto.estimate.EstimateElementDto;
-import ru.kolivim.estimates.calculator.api.dto.estimate.MaterialElementDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.*;
 import ru.kolivim.estimates.calculator.domain.estimate.Element;
 import ru.kolivim.estimates.calculator.domain.estimate.Estimate;
 import ru.kolivim.estimates.calculator.domain.estimate.EstimateElement;
@@ -25,6 +22,8 @@ import ru.kolivim.estimates.calculator.impl.repository.element.MaterialElementRe
 import ru.kolivim.estimates.calculator.impl.repository.price.PriceListRepository;
 import ru.kolivim.estimates.calculator.impl.repository.price.PriceRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -45,6 +44,56 @@ public class EstimateService {
 
     /** Ниже по ??? таблице - для связи estimates с elements и указания количества работ, указанных
      в elements, по которым уже можно посчитать саму смету: */
+
+
+    /** Ниже получение estimates по её id: */
+    public EstimateInfo getEstimate(UUID id) {
+        log.info("EstimateService:getEstimate(UUID id) startMethod, Estimate UUID: {}", id);
+
+        Estimate estimate = estimateRepository.getById(id);
+        log.info("  EstimateService:getEstimate(UUID id) Estimate : {}", estimate);
+
+        EstimateInfo estimateInfo = elementMapper.toEstimateInfo(estimate);
+        log.info("  EstimateService:getEstimate(UUID id) EstimateInfo : {}", estimateInfo);
+
+        /* Вынес в отдельный метод !!!
+        //
+        List<EstimateElement> estimateElements =  estimateElementRepository
+                .findByEstimateIdAndIsDeletedAndStatus (estimateInfo.getId(), estimateInfo.getIsDeleted(), Status.COMPLETED);
+            // TODO: Исправить статусы к возвращению
+
+        List<EstimateElementDto> estimateElementDtoList = new ArrayList<>();
+        for (EstimateElement estimateElement : estimateElements ) {
+            log.info("  EstimateService:getEstimate(UUID id) estimateElement : {}", estimateElement);
+            estimateElementDtoList.add(elementMapper.toEstimateElementDto(estimateElement));
+        }
+        estimateInfo.setEstimateElementDtoList(estimateElementDtoList);
+        log.info("  EstimateService:getEstimate(UUID id) EstimateInfo : {}", estimateInfo);
+        //
+        */
+
+        setEstimateElementDtoList(estimateInfo);
+        log.info("  EstimateService:getEstimate(UUID id) EstimateInfo : {}", estimateInfo);
+
+        return estimateInfo;
+    }
+
+    private void setEstimateElementDtoList(EstimateInfo estimateInfo) {
+        log.info("EstimateService:setEstimateElementDtoList(EstimateInfo estimateInfo) startMethod, EstimateInfo: {}", estimateInfo);
+
+        List<EstimateElement> estimateElements =  estimateElementRepository
+                .findByEstimateIdAndIsDeletedAndStatus (estimateInfo.getId(), estimateInfo.getIsDeleted(), Status.COMPLETED);
+            // TODO: Исправить статусы к возвращению
+
+        List<EstimateElementDto> estimateElementDtoList = new ArrayList<>();
+        for (EstimateElement estimateElement : estimateElements ) {
+            log.info("  EstimateService:setEstimateElementDtoList() estimateElement : {}", estimateElement);
+            estimateElementDtoList.add(elementMapper.toEstimateElementDto(estimateElement));
+        }
+        estimateInfo.setEstimateElementDtoList(estimateElementDtoList);
+
+        log.info("EstimateService:setEstimateElementDtoList(EstimateInfo estimateInfo) endMethod, EstimateInfo: {}", estimateInfo);
+    }
 
 
     /** Ниже по estimates: */
@@ -356,7 +405,6 @@ public class EstimateService {
         log.info("EstimateService:save(MaterialElement materialElement) startMethod, MaterialElement: {}", materialElement);
         return materialElementRepository.save(materialElement);
     }
-
 
 }
 

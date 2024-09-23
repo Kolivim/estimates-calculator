@@ -197,4 +197,22 @@ public abstract class ElementMapper {
         return estimateDto;
     }
 
+    public EstimateInfo toEstimateInfo(Estimate estimate) {
+        log.info("ElementMapper:toEstimateInfo(Estimate estimate) startMethod - получен Estimate: {}", estimate);
+
+        EstimateInfo estimateInfo = new EstimateInfo();
+        estimateInfo.setId(estimate.getId());
+        estimateInfo.setIsDeleted(estimate.getIsDeleted());
+        estimateInfo.setName(estimate.getName());
+        estimateInfo.setWorkPriceListId(estimate.getWorkPriceListId());
+        estimateInfo.setMaterialPriceListId(estimate.getMaterialPriceListId());
+        estimateInfo.setDescription(estimate.getDescription());
+        estimateInfo.setLastAuthorId(estimate.getLastAuthorId());
+        estimateInfo.setLastModifiedDate(estimate.getLastModifiedDate());
+        estimateInfo.setVersion(estimate.getVersion());
+        estimateInfo.setStatus(estimate.getStatus());
+
+        log.info("ElementMapper:toEstimateInfo(Estimate estimate)  endMethod - получен к возврату EstimateInfo: {}", estimateInfo);
+        return estimateInfo;
+    }
 }
