@@ -3,12 +3,15 @@ package ru.kolivim.estimates.calculator.impl.repository.element;
 import jakarta.persistence.Column;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import ru.kolivim.estimates.calculator.api.dto.estimate.Status;
 import ru.kolivim.estimates.calculator.domain.estimate.Element;
 import ru.kolivim.estimates.calculator.impl.repository.base.BaseRepository;
 
 import java.util.UUID;
 
 public interface ElementRepository extends BaseRepository<Element> {
+
+    Element findByIdAndIsDeletedAndStatus (UUID elementId, Boolean isDeleted, Status status);
 
     Boolean existsByWorksIdAndRevision(UUID worksId, String revision);
     Boolean existsByWorksId(UUID worksId);

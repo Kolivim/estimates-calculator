@@ -11,6 +11,8 @@ public interface PriceRepository extends BaseRepository<Price> {
 
     Optional<Price> findById(UUID id);
 
+    Price findByIdAndIsDeleted(UUID id, Boolean isDeleted);
+
     Boolean existsByNameAndPriceListId(String name, UUID priceListId);
 
 }

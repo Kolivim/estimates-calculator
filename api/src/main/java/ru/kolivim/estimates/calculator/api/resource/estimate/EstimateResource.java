@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kolivim.estimates.calculator.api.dto.estimate.*;
+import ru.kolivim.estimates.calculator.api.dto.estimate.info.EstimateInfo;
 
 import javax.security.auth.login.AccountException;
 import java.util.UUID;

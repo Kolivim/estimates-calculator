@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kolivim.estimates.calculator.api.dto.estimate.*;
+import ru.kolivim.estimates.calculator.api.dto.estimate.info.EstimateInfo;
 import ru.kolivim.estimates.calculator.api.resource.estimate.EstimateResource;
 import ru.kolivim.estimates.calculator.impl.service.estimate.EstimateService;
 

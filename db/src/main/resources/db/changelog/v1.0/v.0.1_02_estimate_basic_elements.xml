@@ -109,7 +109,7 @@
             </column>
             <column name="is_deleted" type="boolean"/>
 
-            <column name="id_element" type="varchar(255)"/>                 <!-- Не помню точно - что ли поле id в таблице elements ??? -->
+            <column name="id_element" type="uuid"/>                         <!-- Не помню точно - что ли поле id в таблице elements ??? -->
 
             <column name="material_id" type="uuid"/>                        <!-- По идее вынести и заменить на id записи материала из price ??? column name="material_name" type="varchar(255)" -->
 <!--            <column name="unit_measurement" type="varchar(255)"/>           &lt;!&ndash; По идее вынести в price ??? &ndash;&gt;-->

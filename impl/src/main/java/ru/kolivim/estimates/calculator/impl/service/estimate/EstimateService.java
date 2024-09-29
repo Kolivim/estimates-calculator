@@ -1,15 +1,19 @@
 package ru.kolivim.estimates.calculator.impl.service.estimate;
 
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolivim.estimates.calculator.api.dto.estimate.*;
+import ru.kolivim.estimates.calculator.api.dto.estimate.info.ElementInfoDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.info.EstimateElementInfoDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.info.EstimateInfo;
+import ru.kolivim.estimates.calculator.api.dto.estimate.info.MaterialElementInfoDto;
 import ru.kolivim.estimates.calculator.domain.estimate.Element;
 import ru.kolivim.estimates.calculator.domain.estimate.Estimate;
 import ru.kolivim.estimates.calculator.domain.estimate.EstimateElement;
 import ru.kolivim.estimates.calculator.domain.estimate.MaterialElement;
+import ru.kolivim.estimates.calculator.domain.price.Price;
 import ru.kolivim.estimates.calculator.impl.exception.ElementException;
 import ru.kolivim.estimates.calculator.impl.exception.EstimateElementException;
 import ru.kolivim.estimates.calculator.impl.exception.EstimateException;
@@ -56,26 +60,177 @@ public class EstimateService {
         EstimateInfo estimateInfo = elementMapper.toEstimateInfo(estimate);
         log.info("  EstimateService:getEstimate(UUID id) EstimateInfo : {}", estimateInfo);
 
-        /* Вынес в отдельный метод !!!
-        //
-        List<EstimateElement> estimateElements =  estimateElementRepository
-                .findByEstimateIdAndIsDeletedAndStatus (estimateInfo.getId(), estimateInfo.getIsDeleted(), Status.COMPLETED);
-            // TODO: Исправить статусы к возвращению
+        /** Рабочее, убрал после переноса в EstimateElementInfoDtoList */
+//        setEstimateElementDtoList(estimateInfo);
+//        log.info("  EstimateService:getEstimate(UUID id) EstimateInfo : {}", estimateInfo);
 
-        List<EstimateElementDto> estimateElementDtoList = new ArrayList<>();
-        for (EstimateElement estimateElement : estimateElements ) {
-            log.info("  EstimateService:getEstimate(UUID id) estimateElement : {}", estimateElement);
-            estimateElementDtoList.add(elementMapper.toEstimateElementDto(estimateElement));
-        }
-        estimateInfo.setEstimateElementDtoList(estimateElementDtoList);
+        setEstimateElementInfoDtoList(estimateInfo);
         log.info("  EstimateService:getEstimate(UUID id) EstimateInfo : {}", estimateInfo);
-        //
-        */
 
-        setEstimateElementDtoList(estimateInfo);
+        setElementInfoDto(estimateInfo);
         log.info("  EstimateService:getEstimate(UUID id) EstimateInfo : {}", estimateInfo);
 
         return estimateInfo;
+    }
+
+    private void setElementInfoDto(EstimateInfo estimateInfo) {
+        log.info("EstimateService:setElementInfoDto(EstimateInfo estimateInfo) startMethod, EstimateInfo: {}", estimateInfo);
+
+
+        /**
+         public class EstimateElementInfoDto
+         private EstimateElementDto estimateElementDto;
+         private List<ElementInfoDto> elementInfoDtoList;
+         */
+
+        List<EstimateElementInfoDto> estimateElementInfoDtoList = estimateInfo.getEstimateElementInfoDtoList();
+
+        for (EstimateElementInfoDto estimateElementInfoDto : estimateElementInfoDtoList) {
+//            EstimateElementDto estimateElementDto = estimateElementInfoDto.getEstimateElementDto();
+
+            UUID elementId = estimateElementInfoDto.getEstimateElementDto().getElementId();
+
+            Element element =  elementRepository
+                    .findByIdAndIsDeletedAndStatus (elementId, estimateInfo.getIsDeleted(), Status.COMPLETED);
+            // TODO: Исправить статусы к возвращению
+
+            // TODO: Вынести в маппер ???
+            ElementInfoDto elementInfoDto = new ElementInfoDto();
+            elementInfoDto.setElementDto(elementMapper.toElementDto(element));
+            setWorkInfo(elementInfoDto);
+            setMaterialElementInfoDtoList(elementInfoDto);
+            //
+            estimateElementInfoDto.setElementInfoDto(elementInfoDto);
+
+//            calculateWorkInfo(estimateElementInfoDto);
+            calculateEstimateInfo(estimateElementInfoDto);
+
+        }
+
+        log.info("EstimateService:setElementInfoDto(EstimateInfo estimateInfo) endMethod, EstimateInfo: {}", estimateInfo);
+    }
+
+    private void calculateEstimateInfo(EstimateElementInfoDto estimateElementInfoDto) {
+        log.info("EstimateService: calculateEstimateInfo(EstimateElementInfoDto estimateElementInfoDto) startMethod, EstimateElementInfoDto: {}", estimateElementInfoDto);
+
+        calculateWorkInfo(estimateElementInfoDto);
+        calculateMaterialInfo(estimateElementInfoDto);
+
+        log.info("EstimateService: calculateEstimateInfo(EstimateElementInfoDto estimateElementInfoDto) endMethod, EstimateElementInfoDto: {}", estimateElementInfoDto);
+    }
+
+    private void calculateWorkInfo(EstimateElementInfoDto estimateElementInfoDto) {
+        log.info("EstimateService: calculateWorkInfo(EstimateElementInfoDto estimateElementInfoDto) startMethod, EstimateElementInfoDto: {}", estimateElementInfoDto);
+
+        estimateElementInfoDto.getElementInfoDto().setQuantity(estimateElementInfoDto.getEstimateElementDto().getQuantity());
+
+        Double totalPrice = estimateElementInfoDto.getElementInfoDto().getWorkPrice()
+                * estimateElementInfoDto.getElementInfoDto().getQuantity();
+
+        estimateElementInfoDto.getElementInfoDto().setTotalPrice(totalPrice);
+
+        log.info("EstimateService: calculateWorkInfo(EstimateElementInfoDto estimateElementInfoDto) endMethod, EstimateElementInfoDto: {}", estimateElementInfoDto);
+    }
+
+    private void calculateMaterialInfo(EstimateElementInfoDto estimateElementInfoDto) {
+        log.info("EstimateService: calculateMaterialInfo(EstimateElementInfoDto estimateElementInfoDto) startMethod, EstimateElementInfoDto: {}", estimateElementInfoDto);
+
+        List<MaterialElementInfoDto> materialElementInfoDtoList = estimateElementInfoDto.getElementInfoDto().getMaterialElementInfoDtoList();
+
+        for (MaterialElementInfoDto materialElementInfoDto : materialElementInfoDtoList) {
+            log.info("  EstimateService: calculateMaterialInfo() MaterialElementInfoDto: {}", materialElementInfoDto);
+
+            materialElementInfoDto.setTotalQuantityForWork(materialElementInfoDto.getSummaryQuantity() * estimateElementInfoDto.getElementInfoDto().getQuantity());
+
+            materialElementInfoDto.setTotalPriceForWork(materialElementInfoDto.getMaterialPrice() * materialElementInfoDto.getTotalQuantityForWork());
+        }
+
+        log.info("EstimateService: calculateMaterialInfo(EstimateElementInfoDto estimateElementInfoDto) endMethod, EstimateElementInfoDto: {}", estimateElementInfoDto);
+    }
+
+    private void setMaterialElementInfoDtoList(ElementInfoDto elementInfoDto) {
+        log.info("EstimateService:setMaterialElementInfoDtoList(ElementInfoDto elementInfoDto) startMethod, ElementInfoDto: {}", elementInfoDto);
+        List<MaterialElementInfoDto> materialElementInfoDtoList = new ArrayList<>();
+
+
+        List<MaterialElement> materialElementList = materialElementRepository
+                .findAllMaterialsWork(elementInfoDto.getElementDto().getId(), false);                   // UUID elementId = elementInfoDto.getElementDto().getId();
+
+        for (MaterialElement materialElement : materialElementList) {
+            log.info("  EstimateService:setMaterialElementInfoDtoList() MaterialElement : {}", materialElement);
+
+            // TODO: Вынести в маппер ???
+            MaterialElementInfoDto materialElementInfoDto = new MaterialElementInfoDto();
+            materialElementInfoDto.setMaterialElementDto(elementMapper.toMaterialElementDto(materialElement));
+            setMaterialInfo(materialElementInfoDto);
+            calculateSummaryMaterialQuantity(materialElementInfoDto);
+            //
+
+            materialElementInfoDtoList.add(materialElementInfoDto);
+
+        }
+
+        elementInfoDto.setMaterialElementInfoDtoList(materialElementInfoDtoList);
+
+        log.info("EstimateService:setMaterialElementInfoDtoList(ElementInfoDto elementInfoDto) endMethod, ElementInfoDto: {}", elementInfoDto);
+    }
+
+    private void calculateSummaryMaterialQuantity(MaterialElementInfoDto materialElementInfoDto) {
+        log.info("EstimateService: calculateSummaryMaterialQuantity(MaterialElementInfoDto materialElementInfoDto) startMethod, MaterialElementInfoDto: {}", materialElementInfoDto);
+
+        Double summaryQuantity = materialElementInfoDto.getMaterialElementDto().getQuantity()
+                * materialElementInfoDto.getMaterialElementDto().getConsumptionRate()
+                * materialElementInfoDto.getMaterialElementDto().getReductionFactor()
+                * materialElementInfoDto.getMaterialElementDto().getNumberLayers()
+                * materialElementInfoDto.getMaterialElementDto().getLayerThickness();
+
+        materialElementInfoDto.setSummaryQuantity(summaryQuantity);
+
+        log.info("EstimateService: calculateSummaryMaterialQuantity(MaterialElementInfoDto materialElementInfoDto) endMethod, MaterialElementInfoDto: {}", materialElementInfoDto);
+    }
+
+    private void setMaterialInfo(MaterialElementInfoDto materialElementInfoDto) {
+        log.info("EstimateService:setMaterialInfo(MaterialElementInfoDto materialElementInfoDto) startMethod, MaterialElementInfoDto: {}", materialElementInfoDto);
+
+        Price price = priceRepository.findByIdAndIsDeleted(materialElementInfoDto.getMaterialElementDto().getMaterialId(), false);
+
+        materialElementInfoDto.setMaterialName(price.getName());
+        materialElementInfoDto.setMaterialPrice(price.getPrice());
+        log.info("EstimateService:setMaterialInfo(MaterialElementInfoDto materialElementInfoDto) endMethod, MaterialElementInfoDto: {}", materialElementInfoDto);
+    }
+
+    private void setWorkInfo(ElementInfoDto elementInfoDto) {
+        log.info("EstimateService:setWorkName(UUID worksId) startMethod, ElementInfoDto: {}", elementInfoDto);
+
+        Price price = priceRepository.findByIdAndIsDeleted(elementInfoDto.getElementDto().getWorksId(), false);
+
+        elementInfoDto.setWorkName(price.getName());
+        elementInfoDto.setWorkPrice(price.getPrice());
+        log.info("EstimateService:setWorkName(UUID worksId) endMethod, ElementInfoDto: {}", elementInfoDto);
+    }
+
+    private void setEstimateElementInfoDtoList(EstimateInfo estimateInfo) {
+        log.info("EstimateService:setEstimateElementInfoDtoList(EstimateInfo estimateInfo) startMethod, EstimateInfo: {}", estimateInfo);
+
+        List<EstimateElement> estimateElements =  estimateElementRepository
+                .findByEstimateIdAndIsDeletedAndStatus (estimateInfo.getId(), estimateInfo.getIsDeleted(), Status.COMPLETED);
+        // TODO: Исправить статусы к возвращению
+
+        List<EstimateElementInfoDto> estimateElementInfoDtoList = new ArrayList<>();
+        for (EstimateElement estimateElement : estimateElements ) {
+            log.info("  EstimateService:setEstimateElementInfoDtoList() estimateElement : {}", estimateElement);
+
+            // TODO: Вынести в маппер ???
+            EstimateElementInfoDto estimateElementInfoDto = new EstimateElementInfoDto();
+            estimateElementInfoDto.setEstimateElementDto(elementMapper.toEstimateElementDto(estimateElement));
+            //
+
+            estimateElementInfoDtoList.add(estimateElementInfoDto);
+        }
+
+        estimateInfo.setEstimateElementInfoDtoList(estimateElementInfoDtoList);
+
+        log.info("EstimateService:setEstimateElementInfoDtoList(EstimateInfo estimateInfo) endMethod, EstimateInfo: {}", estimateInfo);
     }
 
     private void setEstimateElementDtoList(EstimateInfo estimateInfo) {

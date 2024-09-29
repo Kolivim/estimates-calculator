@@ -1,20 +1,16 @@
 package ru.kolivim.estimates.calculator.impl.mapper.element;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.stereotype.Component;
 import ru.kolivim.estimates.calculator.api.dto.estimate.*;
-import ru.kolivim.estimates.calculator.api.dto.price.PriceListTypeDto;
+import ru.kolivim.estimates.calculator.api.dto.estimate.info.EstimateInfo;
 import ru.kolivim.estimates.calculator.domain.estimate.Element;
 import ru.kolivim.estimates.calculator.domain.estimate.Estimate;
 import ru.kolivim.estimates.calculator.domain.estimate.EstimateElement;
 import ru.kolivim.estimates.calculator.domain.estimate.MaterialElement;
-import ru.kolivim.estimates.calculator.domain.price.PriceListType;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -57,6 +53,7 @@ public abstract class ElementMapper {
         log.info("ElementMapper:toElementDto(Element element) startMethod - получен Element: {}", element);
 
         ElementDto elementDto = new ElementDto();
+        elementDto.setId(element.getId());
         elementDto.setIsDeleted(element.getIsDeleted());
         elementDto.setWorksId(element.getWorksId());
         elementDto.setRevision(element.getRevision());
@@ -104,6 +101,7 @@ public abstract class ElementMapper {
         log.info("ElementMapper:toMaterialElementDto(MaterialElement materialElement) startMethod - получен MaterialElement: {}", materialElement);
 
         MaterialElementDto materialElementDto = new MaterialElementDto();
+        materialElementDto.setId(materialElement.getId());
         materialElementDto.setIsDeleted(materialElement.getIsDeleted());
         materialElementDto.setElementId(materialElement.getElementId());
         materialElementDto.setMaterialId(materialElement.getMaterialId());
