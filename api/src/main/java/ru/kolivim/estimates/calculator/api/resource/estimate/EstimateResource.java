@@ -7,6 +7,7 @@ import ru.kolivim.estimates.calculator.api.dto.estimate.*;
 import ru.kolivim.estimates.calculator.api.dto.estimate.info.EstimateInfo;
 
 import javax.security.auth.login.AccountException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,5 +30,8 @@ public interface EstimateResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<EstimateInfo> getEstimate(@PathVariable UUID id) throws AccountException;
+
+    @GetMapping("/all")
+    public ResponseEntity<List<EstimateInfo>> getAllEstimates() throws AccountException;
 
 }

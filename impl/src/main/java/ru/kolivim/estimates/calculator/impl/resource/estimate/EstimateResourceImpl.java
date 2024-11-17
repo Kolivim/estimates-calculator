@@ -11,6 +11,7 @@ import ru.kolivim.estimates.calculator.api.resource.estimate.EstimateResource;
 import ru.kolivim.estimates.calculator.impl.service.estimate.EstimateService;
 
 import javax.security.auth.login.AccountException;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -44,4 +45,11 @@ public class EstimateResourceImpl implements EstimateResource {
     public ResponseEntity<EstimateInfo> getEstimate(@PathVariable UUID id) {
         return ResponseEntity.ok(estimateService.getEstimate(id));
     }
+
+    @Override
+    public ResponseEntity<List<EstimateInfo>> getAllEstimates() {
+        return ResponseEntity.ok(estimateService.getAllEstimates());
+    }
+
+
 }

@@ -51,6 +51,21 @@ public class EstimateService {
 
 
     /** Ниже получение estimates по её id: */
+    public ArrayList<EstimateInfo> getAllEstimates() {
+        log.info("EstimateService:getAllEstimates() startMethod");
+
+        ArrayList<EstimateInfo> estimateInfoList = new ArrayList<>();
+
+        List<Estimate> estimateList = estimateRepository.findAll();
+
+        for (Estimate estimate : estimateList) { estimateInfoList.add(getEstimate(estimate.getId())); }                 // todo: вынести в отдельный метод / маппер ?
+
+        log.info("  EstimateService:getAllEstimates() endMethod, ArrayList<EstimateInfo> : {}", estimateInfoList);
+
+        return estimateInfoList;
+    }
+
+
     public EstimateInfo getEstimate(UUID id) {
         log.info("EstimateService:getEstimate(UUID id) startMethod, Estimate UUID: {}", id);
 
